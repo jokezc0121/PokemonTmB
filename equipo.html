@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Crear equipo - Pokémon Team Builder</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="img/favicon.png">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <a class="saltar" href="#contenido">Saltar al contenido</a>
+
+  <header class="navbar">
+    <div class="contenedor">
+      <a href="index.html" class="logo" aria-label="TeamBuilder, ir al inicio"><img src="img/logo.png" alt="" class="logo-img">Team<span>Builder</span></a>
+      <nav aria-label="Navegación principal">
+        <a href="index.html#menu" class="nav-enlace">Menú</a>
+        <a href="equipo.html" class="nav-enlace">Crear equipo</a>
+        <a href="catalogo.html" class="nav-enlace">Catálogo</a>
+        <a href="perfil.html" class="nav-enlace">Mi perfil</a>
+        <a href="ayuda.html" class="nav-enlace">Ayuda</a>
+        <a href="login.html" class="nav-enlace nav-salir" data-accion="salir">Cerrar sesión</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="contenedor editor" id="contenido">
+    <div class="titulo-con-estado">
+      <h1>Crear equipo</h1>
+      <!-- H1: el usuario siempre sabe si su trabajo está guardado -->
+      <p class="estado-guardado" id="estado-guardado" role="status" aria-live="polite">Sin cambios</p>
+    </div>
+
+    <!-- Pasos visibles: el usuario sabe qué sigue (H6 + H10) -->
+    <ol class="guia-pasos" aria-label="Pasos para crear un equipo">
+      <li><strong>1</strong> Nombra tu equipo</li>
+      <li><strong>2</strong> Agrega hasta 6 Pokémon</li>
+      <li><strong>3</strong> Configura cada uno</li>
+      <li><strong>4</strong> Guarda</li>
+    </ol>
+
+    <!-- Datos generales del equipo -->
+    <section class="panel" aria-labelledby="titulo-datos">
+      <h2 id="titulo-datos" class="solo-lectores">Datos del equipo</h2>
+      <div class="fila-datos fila-datos-3">
+        <div class="campo">
+          <label for="nombre-equipo">Nombre del equipo</label>
+          <input type="text" id="nombre-equipo" maxlength="30" placeholder="Ej. Equipo Lluvia" autocomplete="off">
+          <span class="error" id="error-nombre-equipo" aria-live="polite"></span>
+        </div>
+        <div class="campo">
+          <label for="formato">Formato <a href="ayuda.html#formatos" class="info" aria-label="¿Qué es el formato?" title="¿Qué es el formato?">?</a></label>
+          <select id="formato">
+            <option>Combate Individual</option>
+            <option>Combate Doble</option>
+          </select>
+        </div>
+        <div class="campo">
+          <label for="arquetipo">Arquetipo <a href="ayuda.html#arquetipos" class="info" aria-label="¿Qué es un arquetipo?" title="¿Qué es un arquetipo?">?</a></label>
+          <select id="arquetipo"></select>
+        </div>
+      </div>
+
+      <!-- Descripción del arquetipo y lo que ya tiene el equipo -->
+      <div class="arquetipo-info" id="arquetipo-info" hidden></div>
+    </section>
+
+    <div class="editor-grid">
+      <!-- Columna izquierda: equipo y editor -->
+      <div>
+        <section class="panel" aria-labelledby="titulo-equipo">
+          <div class="panel-cabecera">
+            <h2 id="titulo-equipo">Mi equipo <span id="contador">0/6</span></h2>
+            <button type="button" class="boton-mini boton-mini-secundario" id="vaciar" disabled>Vaciar equipo</button>
+          </div>
+          <p class="ayuda" id="ayuda-equipo">Haz clic en un Pokémon para configurarlo.</p>
+          <ul class="ranuras" id="ranuras"></ul>
+        </section>
+
+        <!-- Editor del integrante seleccionado -->
+        <section class="panel" id="editor-integrante" aria-live="polite">
+          <p class="ayuda">Agrega un Pokémon desde el catálogo para empezar.</p>
+        </section>
+      </div>
+
+      <!-- Columna derecha: catálogo y análisis -->
+      <div>
+        <section class="panel" aria-labelledby="titulo-catalogo">
+          <h2 id="titulo-catalogo">Catálogo</h2>
+          <div class="campo">
+            <label for="buscar">Buscar Pokémon <kbd class="atajo" title="Atajo de teclado">/</kbd></label>
+            <input type="search" id="buscar" data-atajo-buscar placeholder="Nombre, tipo o habilidad" autocomplete="off" aria-describedby="pista-buscar">
+            <small class="pista" id="pista-buscar">Pulsa Enter para agregar el primer resultado.</small>
+          </div>
+          <ul class="catalogo" id="catalogo"></ul>
+        </section>
+
+        <section class="panel" aria-labelledby="titulo-analisis">
+          <h2 id="titulo-analisis">Estadísticas base promedio</h2>
+          <div id="estadisticas"></div>
+          <p class="aviso" id="aviso">Agrega Pokémon para ver el análisis.</p>
+        </section>
+
+        <section class="panel panel-guardar" aria-labelledby="titulo-guardar">
+          <h2 id="titulo-guardar">Antes de guardar</h2>
+          <!-- H5 + H6: los requisitos se ven y se marcan antes de intentar guardar -->
+          <ul class="requisitos" id="requisitos-equipo"></ul>
+          <button type="button" class="boton boton-principal" id="guardar">Guardar equipo <small class="atajo-boton">Ctrl + S</small></button>
+          <ul class="mensaje-lista" id="mensaje" aria-live="polite"></ul>
+        </section>
+      </div>
+    </div>
+  </main>
+  <script src="js/ui.js"></script>
+  <script src="js/datos.js"></script>
+  <script src="js/editor.js"></script>
+  <script src="js/analisis.js"></script>
+  <script src="js/equipo.js"></script>
+</body>
+</html>

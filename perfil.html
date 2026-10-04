@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mi perfil - Pokémon Team Builder</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="img/favicon.png">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <a class="saltar" href="#contenido">Saltar al contenido</a>
+
+  <header class="navbar">
+    <div class="contenedor">
+      <a href="index.html" class="logo" aria-label="TeamBuilder, ir al inicio"><img src="img/logo.png" alt="" class="logo-img">Team<span>Builder</span></a>
+      <nav aria-label="Navegación principal">
+        <a href="index.html#menu" class="nav-enlace">Menú</a>
+        <a href="equipo.html" class="nav-enlace">Crear equipo</a>
+        <a href="catalogo.html" class="nav-enlace">Catálogo</a>
+        <a href="perfil.html" class="nav-enlace">Mi perfil</a>
+        <a href="ayuda.html" class="nav-enlace">Ayuda</a>
+        <a href="login.html" class="nav-enlace nav-salir" data-accion="salir">Cerrar sesión</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="contenedor editor" id="contenido">
+    <h1>Mi perfil</h1>
+
+    <!-- Datos del entrenador (simulados) -->
+    <section class="panel perfil">
+      <div class="perfil-foto">
+        <img id="foto" src="" alt="Tu foto de perfil">
+        <button type="button" class="boton-mini" id="cambiar-foto" aria-describedby="pista-foto">Cambiar foto</button>
+        <input type="file" id="subir-foto" accept="image/png, image/jpeg, image/webp" hidden>
+        <!-- H5: las condiciones se dicen antes de elegir el archivo -->
+        <small class="pista" id="pista-foto">JPG, PNG o WEBP · máximo 2 MB</small>
+        <small class="error" id="error-foto" aria-live="polite"></small>
+      </div>
+
+      <div class="perfil-datos">
+        <h2 id="nombre-entrenador">AshCali</h2>
+        <p id="correo-entrenador">ash@correo.com</p>
+        <p id="bio-entrenador">Jugador de Combate Doble. Me gustan los equipos de lluvia.</p>
+
+        <ul class="perfil-resumen">
+          <li><strong>3</strong>Equipos</li>
+          <li><strong>Doble</strong>Formato favorito</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Pokémon favorito -->
+    <section class="panel">
+      <h2>Pokémon favorito</h2>
+
+      <div class="favorito">
+        <img class="favorito-img" id="favorito-img" src="" alt="">
+
+        <div class="favorito-info">
+          <p class="favorito-nombre" id="favorito-nombre"></p>
+          <div id="favorito-tipos"></div>
+          <p class="favorito-habilidades" id="favorito-habilidades"></p>
+          <div id="favorito-stats"></div>
+        </div>
+      </div>
+
+      <div class="campo cambiar-favorito">
+        <label for="elegir-favorito">Cambiar favorito</label>
+        <select id="elegir-favorito"></select>
+        <small class="pista">El cambio se guarda automáticamente.</small>
+      </div>
+    </section>
+  </main>
+
+  <script src="js/ui.js"></script>
+  <script src="js/datos.js"></script>
+  <script src="js/perfil.js"></script>
+</body>
+</html>

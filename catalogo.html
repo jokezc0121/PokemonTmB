@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Catálogo - Pokémon Team Builder</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="img/favicon.png">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <a class="saltar" href="#contenido">Saltar al contenido</a>
+
+  <header class="navbar">
+    <div class="contenedor">
+      <a href="index.html" class="logo" aria-label="TeamBuilder, ir al inicio"><img src="img/logo.png" alt="" class="logo-img">Team<span>Builder</span></a>
+      <nav aria-label="Navegación principal">
+        <a href="index.html#menu" class="nav-enlace">Menú</a>
+        <a href="equipo.html" class="nav-enlace">Crear equipo</a>
+        <a href="catalogo.html" class="nav-enlace">Catálogo</a>
+        <a href="perfil.html" class="nav-enlace">Mi perfil</a>
+        <a href="ayuda.html" class="nav-enlace">Ayuda</a>
+        <a href="login.html" class="nav-enlace nav-salir" data-accion="salir">Cerrar sesión</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="contenedor editor" id="contenido">
+    <h1>Catálogo de Pokémon</h1>
+    <p class="ayuda">Consulta tipos, habilidades y estadísticas base. Usa <strong>Agregar</strong> para llevar un Pokémon a tu equipo. <a href="ayuda.html#estadisticas">¿Qué significa cada estadística?</a></p>
+
+    <section class="panel" aria-label="Filtros y lista de Pokémon">
+      <div class="filtros">
+        <div class="campo">
+          <label for="buscar">Buscar <kbd class="atajo" title="Atajo de teclado">/</kbd></label>
+          <input type="search" id="buscar" data-atajo-buscar placeholder="Nombre, tipo o habilidad" autocomplete="off">
+        </div>
+        <div class="campo">
+          <label for="filtro-tipo">Tipo</label>
+          <select id="filtro-tipo">
+            <option value="">Todos los tipos</option>
+          </select>
+        </div>
+        <div class="campo">
+          <label for="ordenar">Ordenar por</label>
+          <select id="ordenar">
+            <option value="nombre">Nombre (A-Z)</option>
+            <option value="ps">PS (mayor primero)</option>
+            <option value="atq">Ataque (mayor primero)</option>
+            <option value="def">Defensa (mayor primero)</option>
+            <option value="ate">Ataque Especial (mayor primero)</option>
+            <option value="dfe">Defensa Especial (mayor primero)</option>
+            <option value="vel">Velocidad (mayor primero)</option>
+            <option value="total">Total (mayor primero)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="barra-resultados">
+        <p class="ayuda" id="resultados" role="status" aria-live="polite"></p>
+        <button type="button" class="boton-mini boton-mini-secundario" id="limpiar" hidden>✕ Limpiar filtros</button>
+      </div>
+
+      <div class="tabla-scroll">
+        <table class="tabla-catalogo">
+          <caption class="solo-lectores">Pokémon del catálogo. Haz clic en el encabezado de una estadística para ordenar.</caption>
+          <thead>
+            <tr>
+              <th scope="col"><span class="solo-lectores">Imagen</span></th>
+              <th scope="col"><button type="button" class="ordenable" data-orden="nombre">Pokémon</button></th>
+              <th scope="col">Tipos</th>
+              <th scope="col">Habilidades</th>
+              <th scope="col">Habilidad oculta</th>
+              <th scope="col"><button type="button" class="ordenable" data-orden="ps"><abbr title="Puntos de Salud">PS</abbr></button></th>
+              <th scope="col"><button type="button" class="ordenable" data-orden="atq"><abbr title="Ataque">Atq</abbr></button></th>
+              <th scope="col"><button type="button" class="ordenable" data-orden="def"><abbr title="Defensa">Def</abbr></button></th>
+              <th scope="col"><button type="button" class="ordenable" data-orden="ate"><abbr title="Ataque Especial">At. Esp.</abbr></button></th>
+              <th scope="col"><button type="button" class="ordenable" data-orden="dfe"><abbr title="Defensa Especial">Def. Esp.</abbr></button></th>
+              <th scope="col"><button type="button" class="ordenable" data-orden="vel"><abbr title="Velocidad">Vel</abbr></button></th>
+              <th scope="col"><button type="button" class="ordenable" data-orden="total">Total</button></th>
+              <th scope="col"><span class="solo-lectores">Acciones</span></th>
+            </tr>
+          </thead>
+          <tbody id="tabla-pokemon"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <script src="js/ui.js"></script>
+  <script src="js/datos.js"></script>
+  <script src="js/catalogo.js"></script>
+</body>
+</html>
