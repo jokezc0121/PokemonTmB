@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Crear cuenta - Pokémon Team Builder</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="img/favicon.png">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <main class="pagina-form" id="contenido">
+    <div class="caja-form">
+      <a href="index.html" class="logo" aria-label="TeamBuilder, volver al inicio"><img src="img/logo.png" alt="" class="logo-img">Team<span>Builder</span></a>
+      <h1>Crear cuenta</h1>
+      <p class="intro-form">Todos los campos son obligatorios.</p>
+
+      <form id="form-registro" novalidate>
+        <div class="campo">
+          <label for="nombre">Nombre de entrenador</label>
+          <input type="text" id="nombre" name="nombre" autocomplete="username" required
+                 minlength="3" maxlength="20" placeholder="Ej. AshCali"
+                 aria-describedby="pista-nombre error-nombre">
+          <small class="pista" id="pista-nombre">Entre 3 y 20 caracteres. Así te verán otros jugadores.</small>
+          <span class="error" id="error-nombre" aria-live="polite"></span>
+        </div>
+
+        <div class="campo">
+          <label for="correo">Correo</label>
+          <input type="email" id="correo" name="correo" autocomplete="email" required
+                 placeholder="entrenador@correo.com" aria-describedby="error-correo">
+          <span class="error" id="error-correo" aria-live="polite"></span>
+        </div>
+
+        <div class="campo">
+          <label for="clave">Contraseña</label>
+          <div class="con-boton">
+            <input type="password" id="clave" name="clave" autocomplete="new-password" required
+                   minlength="8" aria-describedby="requisitos-clave error-clave">
+            <button type="button" class="boton-ver" data-ver-clave="clave" aria-pressed="false"
+                    aria-label="Mostrar u ocultar contraseña">Mostrar</button>
+          </div>
+          <!-- Requisitos visibles mientras escribe (reconocer en vez de recordar) -->
+          <ul class="requisitos" id="requisitos-clave">
+            <li data-regla="largo">Al menos 8 caracteres</li>
+            <li data-regla="numero">Al menos un número</li>
+            <li data-regla="letra">Al menos una letra</li>
+          </ul>
+          <span class="error" id="error-clave" aria-live="polite"></span>
+        </div>
+
+        <div class="campo">
+          <label for="confirmar">Confirmar contraseña</label>
+          <div class="con-boton">
+            <input type="password" id="confirmar" name="confirmar" autocomplete="new-password" required
+                   aria-describedby="error-confirmar">
+            <button type="button" class="boton-ver" data-ver-clave="confirmar" aria-pressed="false"
+                    aria-label="Mostrar u ocultar confirmación">Mostrar</button>
+          </div>
+          <span class="error" id="error-confirmar" aria-live="polite"></span>
+        </div>
+
+        <button type="submit" class="boton boton-principal" id="enviar">Crear cuenta</button>
+        <p class="mensaje" id="mensaje" role="status" aria-live="polite"></p>
+      </form>
+
+      <p class="enlace-form">¿Ya tienes cuenta? <a href="login.html">Iniciar sesión</a></p>
+      <p class="enlace-form"><a href="index.html">← Volver al inicio</a> · <a href="ayuda.html#cuenta">Ayuda</a></p>
+    </div>
+  </main>
+
+  <script src="js/ui.js"></script>
+  <script src="js/validacion.js"></script>
+</body>
+</html>

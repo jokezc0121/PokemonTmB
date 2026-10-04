@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pokémon Team Builder</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="img/favicon.png">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <a class="saltar" href="#contenido">Saltar al contenido</a>
+
+  <!-- Barra de navegación -->
+  <header class="navbar">
+    <div class="contenedor">
+      <a href="index.html" class="logo" aria-label="TeamBuilder, ir al inicio"><img src="img/logo.png" alt="" class="logo-img">Team<span>Builder</span></a>
+      <nav aria-label="Navegación principal">
+        <a href="#menu" class="nav-enlace">Menú</a>
+        <a href="ayuda.html" class="nav-enlace">Ayuda</a>
+        <a href="login.html" class="boton boton-secundario">Iniciar sesión</a>
+        <a href="register.html" class="boton boton-principal">Crear cuenta</a>
+      </nav>
+    </div>
+  </header>
+ 
+  <main id="contenido">
+    <!-- Hero -->
+    <section class="hero contenedor">
+      <img src="img/logo.png" alt="Logo de Team Builder" class="hero-logo">
+      <h1>Arma tu equipo <span>Pokémon</span> ideal</h1>
+      <p>
+        Crea, valida y analiza equipos competitivos para Pokémon Champions.
+        Guarda tus equipos en tu cuenta y compártelos con otros jugadores.
+      </p>
+      <div class="botones">
+        <a href="register.html" class="boton boton-principal">Crear cuenta gratis</a>
+        <a href="login.html" class="boton boton-secundario">Iniciar sesión</a>
+      </div>
+    </section>
+ 
+    <div class="fila-menu contenedor">
+ 
+    <!-- Menú del Team Builder -->
+    <section class="seccion" id="menu">
+      <h2>Menú principal</h2>
+      <ul class="menu-opciones">
+        <li>
+          <a href="equipo.html">Crear equipo
+            <small>Arma un equipo de hasta seis Pokémon y configúralos.</small>
+          </a>
+        </li>
+        <li>
+          <span class="opcion-inactiva" aria-disabled="true">Mis equipos <em class="etiqueta-pronto">Próximamente</em>
+            <small>Revisa, edita o elimina tus equipos guardados.</small>
+          </span>
+        </li>
+        <li>
+          <a href="catalogo.html">Catálogo
+            <small>Mira todos los Pokémon con sus tipos, habilidades y estadísticas.</small>
+          </a>
+        </li>
+        <li>
+          <span class="opcion-inactiva" aria-disabled="true">Importar equipo <em class="etiqueta-pronto">Próximamente</em>
+            <small>Sube un archivo .txt con tu equipo.</small>
+          </span>
+        </li>
+        <li>
+          <a href="perfil.html">Mi perfil
+            <small>Tu foto, tus datos y tu Pokémon favorito.</small>
+          </a>
+        </li>
+        <li>
+          <a href="ayuda.html">Ayuda
+            <small>Guía paso a paso, glosario y atajos de teclado.</small>
+          </a>
+        </li>
+      </ul>
+    </section>
+ 
+    <!-- Beneficios -->
+    <section class="seccion">
+      <h2>¿Qué puedes hacer?</h2>
+      <div class="tarjetas">
+        <article class="tarjeta">
+          <h3>Crear equipos</h3>
+          <p>Elige hasta seis Pokémon con su habilidad, objeto y movimientos.</p>
+        </article>
+        <article class="tarjeta">
+          <h3>Validar reglas</h3>
+          <p>Revisa si tu equipo cumple la regulación de Individual o Doble.</p>
+        </article>
+        <article class="tarjeta">
+          <h3>Ver debilidades</h3>
+          <p>Descubre a qué tipos es débil tu equipo y cómo mejorarlo.</p>
+        </article>
+        <article class="tarjeta">
+          <h3>Recomendaciones</h3>
+          <p>Recibe sugerencias de Pokémon según la estadística más baja del equipo.</p>
+        </article>
+        <article class="tarjeta">
+          <h3>Historial <em class="etiqueta-pronto">Pronto</em></h3>
+          <p>Guarda versiones de tus equipos y vuelve a una anterior cuando quieras.</p>
+        </article>
+        <article class="tarjeta">
+          <h3>Compartir <em class="etiqueta-pronto">Pronto</em></h3>
+          <p>Exporta en TXT o PNG y comparte tus equipos con un enlace.</p>
+        </article>
+      </div>
+    </section>
+ 
+    </div>
+ 
+    <!-- Cómo funciona -->
+    <section class="seccion contenedor">
+      <h2>¿Cómo funciona?</h2>
+      <ol class="pasos">
+        <li><strong>1</strong>Crea tu cuenta</li>
+        <li><strong>2</strong>Arma tu equipo</li>
+        <li><strong>3</strong>Analízalo</li>
+        <li><strong>4</strong>Guárdalo</li>
+      </ol>
+    </section>
+ 
+    <!-- Llamado final -->
+    <section class="seccion contenedor">
+      <div class="cta">
+        <h2>¿Listo para el combate?</h2>
+        <p>Regístrate gratis y empieza a construir tu equipo.</p>
+        <a href="register.html" class="boton boton-principal">Crear cuenta gratis</a>
+      </div>
+    </section>
+  </main>
+ 
+  <footer class="footer">
+    <div class="contenedor">
+      <p class="footer-enlaces"><a href="ayuda.html">Ayuda y preguntas frecuentes</a> · <a href="#" data-accion="atajos">Atajos de teclado</a></p>
+      <p>(Proyecto académico sin fines comerciales. Pokémon es marca de Nintendo, Creatures Inc. y GAME FREAK.)</p>
+    </div>
+  </footer>
+
+  <script src="js/ui.js"></script>
+</body>
+</html>
