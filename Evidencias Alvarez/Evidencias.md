@@ -34,5 +34,5 @@ Aquí se ve otro insert esta vez hecho por ChatGPT y se ve que me creó el archi
 
 ## Aclaracion
 En la carpeta insertSQL se encuentran ya los archivos de los insert generados por IA, los otros menos extensos como tipos (eran 18) y naturalezas (25) si fueron manual desde el editor de tablas de supabase
-[Ver los inserts](./insertSQL/)
+[Ver los inserts](./insertsSQL/)
 
