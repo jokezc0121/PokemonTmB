@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ayuda - Pokémon Team Builder</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="img/favicon.png">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <a class="saltar" href="#contenido">Saltar al contenido</a>
+
+  <header class="navbar">
+    <div class="contenedor">
+      <a href="index.html" class="logo" aria-label="TeamBuilder, ir al inicio"><img src="img/logo.png" alt="" class="logo-img">Team<span>Builder</span></a>
+      <nav aria-label="Navegación principal">
+        <a href="index.html#menu" class="nav-enlace">Menú</a>
+        <a href="equipo.html" class="nav-enlace">Crear equipo</a>
+        <a href="catalogo.html" class="nav-enlace">Catálogo</a>
+        <a href="perfil.html" class="nav-enlace">Mi perfil</a>
+        <a href="ayuda.html" class="nav-enlace">Ayuda</a>
+        <a href="login.html" class="nav-enlace nav-salir" data-accion="salir">Cerrar sesión</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- H10 Ayuda y documentación: búsqueda + respuestas centradas en tareas -->
+  <main class="contenedor editor ayuda-pagina" id="contenido">
+    <h1>Ayuda</h1>
+    <p class="ayuda">Busca una palabra o elige un tema. Cada respuesta explica qué hacer, paso a paso.</p>
+
+    <section class="panel">
+      <div class="campo">
+        <label for="buscar-ayuda">Buscar en la ayuda <kbd class="atajo" title="Atajo de teclado">/</kbd></label>
+        <input type="search" id="buscar-ayuda" data-atajo-buscar placeholder="Ej. EV, guardar, contraseña" autocomplete="off">
+      </div>
+      <p class="ayuda" id="resultados-ayuda" role="status" aria-live="polite"></p>
+    </section>
+
+    <section class="panel" aria-labelledby="h-tareas">
+      <h2 id="h-tareas">Cómo hacer…</h2>
+
+      <details class="pregunta" id="cuenta">
+        <summary>Crear una cuenta e iniciar sesión</summary>
+        <ol>
+          <li>Pulsa <strong>Crear cuenta</strong> arriba a la derecha.</li>
+          <li>Escribe tu nombre de entrenador (3 a 20 caracteres), tu correo y una contraseña de al menos 8 caracteres con letras y números.</li>
+          <li>Pulsa <strong>Crear cuenta</strong>. Te llevaremos a <strong>Iniciar sesión</strong>.</li>
+          <li>Escribe tu correo y contraseña. Usa <strong>Mostrar</strong> para revisar lo que escribiste.</li>
+        </ol>
+        <p>Si un campo queda en rosa, el mensaje debajo te dice exactamente qué corregir.</p>
+      </details>
+
+      <details class="pregunta" id="crear">
+        <summary>Armar y guardar un equipo</summary>
+        <ol>
+          <li>Ve a <a href="equipo.html">Crear equipo</a> y escribe un nombre para tu equipo.</li>
+          <li>Elige el <a href="#formatos">formato</a> (Individual o Doble) y, si quieres, un <a href="#arquetipos">arquetipo</a>.</li>
+          <li>En el catálogo de la derecha pulsa <strong>+ Agregar</strong> (máximo 6 Pokémon).</li>
+          <li>Haz clic en cada Pokémon de tu equipo para elegir habilidad, objeto, naturaleza, movimientos y EV.</li>
+          <li>Revisa la lista <strong>Antes de guardar</strong>: cuando todo esté en verde, pulsa <strong>Guardar equipo</strong>.</li>
+        </ol>
+        <p>Tu avance se guarda como borrador en este navegador. Si cierras la página por error, lo recuperas al volver.</p>
+      </details>
+
+      <details class="pregunta" id="quitar">
+        <summary>Quitar un Pokémon o deshacer un error</summary>
+        <p>Pulsa <strong>✕</strong> en la ranura del Pokémon. Aparecerá un aviso abajo con el botón <strong>Deshacer</strong> (también funciona <kbd>Ctrl</kbd> + <kbd>Z</kbd>). Para empezar de cero usa <strong>Vaciar equipo</strong>; te pediremos confirmación y también se puede deshacer.</p>
+      </details>
+
+      <details class="pregunta" id="foto">
+        <summary>Cambiar mi foto o mi Pokémon favorito</summary>
+        <p>En <a href="perfil.html">Mi perfil</a> pulsa <strong>Cambiar foto</strong> y elige una imagen JPG, PNG o WEBP de máximo 2 MB. Para el favorito, elígelo en la lista: se guarda solo y puedes deshacerlo desde el aviso.</p>
+      </details>
+
+      <details class="pregunta" id="no-guarda">
+        <summary>No me deja guardar el equipo</summary>
+        <p>Debajo del botón aparece qué falta. Pulsa <strong>Corregir →</strong> junto a cada problema y te llevaremos al campo exacto. Los motivos más comunes:</p>
+        <ul>
+          <li>El equipo no tiene nombre.</li>
+          <li>Algún Pokémon no tiene movimientos (su ranura muestra ⚠).</li>
+          <li>Dos Pokémon llevan el mismo objeto.</li>
+        </ul>
+      </details>
+    </section>
+
+    <section class="panel" aria-labelledby="h-glosario">
+      <h2 id="h-glosario">Glosario</h2>
+
+      <details class="pregunta" id="formatos">
+        <summary>Formato: Combate Individual y Doble</summary>
+        <p><strong>Individual:</strong> cada jugador tiene un Pokémon en el campo. <strong>Doble:</strong> cada jugador tiene dos Pokémon a la vez, así que importan los ataques que golpean a varios y el apoyo entre compañeros.</p>
+      </details>
+
+      <details class="pregunta" id="arquetipos">
+        <summary>Arquetipo</summary>
+        <p>Es el estilo o estrategia del equipo (por ejemplo «Lluvia» u «Ofensiva total»). Al elegir uno verás su descripción y una lista de elementos clave: se marcan con ✓ cuando tu equipo ya los tiene. Es opcional.</p>
+      </details>
+
+      <details class="pregunta" id="estadisticas">
+        <summary>Estadísticas (PS, Ataque, Defensa…)</summary>
+        <ul>
+          <li><strong>PS</strong> (Puntos de Salud): cuánto daño aguanta.</li>
+          <li><strong>Ataque / Defensa:</strong> daño que hace y recibe con movimientos físicos.</li>
+          <li><strong>At. Esp. / Def. Esp.</strong> (Ataque y Defensa Especial): lo mismo con movimientos especiales.</li>
+          <li><strong>Velocidad:</strong> quién ataca primero.</li>
+          <li><strong>Total:</strong> la suma de las seis.</li>
+        </ul>
+        <p>La <strong>Base</strong> es propia de cada especie; la <strong>Final</strong> es el valor real a nivel 50 con tu naturaleza y EV.</p>
+      </details>
+
+      <details class="pregunta" id="ev">
+        <summary>EV (puntos de esfuerzo)</summary>
+        <p>Son puntos de entrenamiento que reparten mejoras entre las estadísticas. Puedes poner hasta <strong>252</strong> en una estadística y <strong>510</strong> en total. Usa <strong>Máx</strong> para poner el máximo posible o <strong>0</strong> para quitar. La barra debajo de la tabla te muestra cuántos te quedan.</p>
+      </details>
+
+      <details class="pregunta" id="naturaleza">
+        <summary>Naturaleza</summary>
+        <p>Sube una estadística un 10% y baja otra un 10%. En la lista se ve el efecto, por ejemplo «Firme (+Ataque −At. Esp.)». En la tabla la estadística que sube aparece en amarillo con «+» y la que baja en rosa con «−». Algunas son neutras y no cambian nada.</p>
+      </details>
+
+      <details class="pregunta" id="habilidad">
+        <summary>Habilidad oculta</summary>
+        <p>Es una habilidad especial y más rara que algunas especies pueden tener. En el editor aparece marcada como «(oculta)».</p>
+      </details>
+
+      <details class="pregunta" id="objetos">
+        <summary>Objetos</summary>
+        <p>Cada Pokémon puede llevar un objeto. En competitivo no se puede repetir un objeto dentro del mismo equipo, por eso los que ya lleva otro Pokémon aparecen desactivados con el nombre de quién lo tiene.</p>
+      </details>
+    </section>
+
+    <section class="panel" aria-labelledby="h-atajos">
+      <h2 id="h-atajos">Atajos de teclado</h2>
+      <p>Pulsa <kbd>?</kbd> en cualquier página para verlos.</p>
+      <table class="tabla-atajos">
+        <tr><td><kbd>/</kbd></td><td>Ir al buscador de la página</td></tr>
+        <tr><td><kbd>Esc</kbd></td><td>Cerrar ventanas y avisos</td></tr>
+        <tr><td><kbd>Ctrl</kbd> + <kbd>S</kbd></td><td>Guardar el equipo</td></tr>
+        <tr><td><kbd>Enter</kbd> en el buscador</td><td>Agregar el primer resultado al equipo</td></tr>
+        <tr><td><kbd>Ctrl</kbd> + <kbd>Z</kbd></td><td>Deshacer el último Pokémon quitado</td></tr>
+      </table>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="contenedor">
+      <p>(Proyecto académico sin fines comerciales. Pokémon es marca de Nintendo, Creatures Inc. y GAME FREAK.)</p>
+    </div>
+  </footer>
+
+  <script src="js/ui.js"></script>
+  <script src="js/datos.js"></script>
+  <script src="js/ayuda.js"></script>
+</body>
+</html>

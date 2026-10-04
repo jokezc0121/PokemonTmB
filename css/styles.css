@@ -1716,4 +1716,49 @@ abbr[title] {
     justify-content: center;
   }
 }
+/* =====================================================
+   7. AYUDA
+   ayuda.html
+   ===================================================== */
+
+.pregunta {
+  border-bottom: 2px solid var(--noche);
+  padding: 4px 0;
+}
+
+.pregunta summary {
+  cursor: pointer;
+  padding: 12px 0;
+  font-size: 11px;
+  color: var(--texto);
+}
+
+.pregunta summary:hover,
+.pregunta[open] summary {
+  color: var(--amarillo);
+}
+
+.pregunta ol,
+.pregunta ul,
+.pregunta p {
+  font-family: system-ui, sans-serif;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--gris);
+  margin: 0 0 12px;
+}
+
+.pregunta ol,
+.pregunta ul {
+  padding-left: 22px;
+}
+
+.pregunta strong {
+  color: var(--texto);
+}
+
+.pregunta.resaltada {
+  border-left: 4px solid var(--rosa);
+  padding-left: 12px;
+}
 
