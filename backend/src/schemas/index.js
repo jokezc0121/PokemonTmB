@@ -63,6 +63,7 @@ const perfil = z
     nombreEntrenador: nombreEntrenador.optional(),
     biografia: textoOpcional(300),
     formatoPreferido: formato.nullable().optional(),
+    pokemonFavorito: idONombre.nullable().optional(),
   })
   .refine((d) => Object.keys(d).length > 0, "Envía al menos un campo para actualizar.");
 

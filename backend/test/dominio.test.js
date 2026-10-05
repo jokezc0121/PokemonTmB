@@ -170,3 +170,10 @@ test("la contraseña acepta letras con tilde y exige un número", () => {
   assert.equal(esquemas.registro.safeParse({ ...datos, contrasena: "ñañañañañ" }).success, false);
   assert.equal(esquemas.registro.safeParse({ ...datos, contrasena: "12345678" }).success, false);
 });
+
+test("el perfil acepta un pokemon favorito por id, nombre o vacio", () => {
+  assert.equal(esquemas.perfil.safeParse({ pokemonFavorito: 6 }).success, true);
+  assert.equal(esquemas.perfil.safeParse({ pokemonFavorito: "Garchomp" }).success, true);
+  assert.equal(esquemas.perfil.safeParse({ pokemonFavorito: null }).success, true);
+  assert.equal(esquemas.perfil.safeParse({ pokemonFavorito: -1 }).success, false);
+});
