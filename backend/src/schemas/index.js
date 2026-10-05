@@ -118,7 +118,7 @@ const busquedaPokemon = z.object({
   orden: z.enum(["nombre", "pokedex", "total", ...STATS]).default("pokedex"),
   dir: z.enum(["asc", "desc"]).default("asc"),
   pagina: z.coerce.number().int().min(1).default(1),
-  limite: z.coerce.number().int().min(1).max(400).default(50),
+  limite: z.coerce.number().int().min(1).max(1000).default(50),
 });
 
 const busquedaEquipos = z.object({

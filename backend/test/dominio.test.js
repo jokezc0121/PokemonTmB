@@ -177,3 +177,8 @@ test("el perfil acepta un pokemon favorito por id, nombre o vacio", () => {
   assert.equal(esquemas.perfil.safeParse({ pokemonFavorito: null }).success, true);
   assert.equal(esquemas.perfil.safeParse({ pokemonFavorito: -1 }).success, false);
 });
+
+test("el catalogo se puede pedir completo en una sola pagina", () => {
+  assert.equal(esquemas.busquedaPokemon.parse({ limite: "1000" }).limite, 1000);
+  assert.equal(esquemas.busquedaPokemon.safeParse({ limite: "1001" }).success, false);
+});
