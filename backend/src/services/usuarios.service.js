@@ -2,6 +2,24 @@ const supabase = require("../config/supabase");
 const { errores, verificar } = require("../utils/errores");
 const { COLUMNAS_USUARIO } = require("./auth.service");
 const archivos = require("./archivos.service");
+const catalogo = require("./catalogo.service");
+
+async function favoritoDTO(id) {
+  if (!id) return null;
+  const cat = await catalogo.obtener();
+  const p = cat.pokemon.get(id);
+  return p ? catalogo.pokemonResumenDTO(cat, p) : null;
+}
+
+async function resolverFavorito(valor) {
+  if (valor === null) return null;
+  const cat = await catalogo.obtener();
+  const id = catalogo.resolverId(cat, "pokemon", valor);
+  if (!id) {
+    throw errores.validacion("Revisa el Pokémon favorito.", [{ campo: "pokemonFavorito", mensaje: "Pokémon no encontrado." }]);
+  }
+  return id;
+}
 
 async function usuarioDTO(u) {
   let avatar = null;
@@ -20,6 +38,7 @@ async function usuarioDTO(u) {
     biografia: u.biografia,
     formatoPreferido: u.formato_preferido,
     avatar,
+    pokemonFavorito: await favoritoDTO(u.pokemon_favorito_id),
     creadoEn: u.creado_en,
   };
 }
@@ -37,11 +56,12 @@ async function obtenerPerfil(id) {
   return usuarioDTO(await buscar(id));
 }
 
-async function actualizarPerfil(id, { nombreEntrenador, biografia, formatoPreferido }) {
+async function actualizarPerfil(id, { nombreEntrenador, biografia, formatoPreferido, pokemonFavorito }) {
   const cambios = { actualizado_en: new Date().toISOString() };
   if (nombreEntrenador !== undefined) cambios.nombreUsuario = nombreEntrenador;
   if (biografia !== undefined) cambios.biografia = biografia;
   if (formatoPreferido !== undefined) cambios.formato_preferido = formatoPreferido;
+  if (pokemonFavorito !== undefined) cambios.pokemon_favorito_id = await resolverFavorito(pokemonFavorito);
 
   const u = verificar(
     await supabase.from("usuario").update(cambios).eq("id", id).select(COLUMNAS_USUARIO).single(),

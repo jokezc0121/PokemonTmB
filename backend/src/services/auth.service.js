@@ -7,7 +7,7 @@ const { errores, verificar } = require("../utils/errores");
 const RONDAS_BCRYPT = 10;
 const HASH_RELLENO = bcrypt.hashSync("contraseña-de-relleno", RONDAS_BCRYPT);
 
-const COLUMNAS_USUARIO = 'id, "nombreUsuario", correo, rol, biografia, formato_preferido, avatar_archivo_id, creado_en';
+const COLUMNAS_USUARIO = 'id, "nombreUsuario", correo, rol, biografia, formato_preferido, avatar_archivo_id, pokemon_favorito_id, creado_en';
 
 async function crearSesion(usuarioId) {
   const expiraEn = new Date(Date.now() + env.jwtExpiresHours * 3600 * 1000);
