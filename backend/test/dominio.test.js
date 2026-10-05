@@ -156,3 +156,10 @@ test("importa el formato de texto de la comunidad", () => {
   assert.equal(i.naturaleza, "Modesta");
   assert.deepEqual(i.movimientos, ["Lanzallamas", "Protección"]);
 });
+
+test("el listado de pokemon incluye sus habilidades", () => {
+  const { pokemonResumenDTO } = require("../src/services/catalogo.service");
+  const cat = crearCatalogo();
+  const dto = pokemonResumenDTO(cat, cat.pokemon.get(3));
+  assert.deepEqual(dto.habilidades, [{ id: 2, nombre: "Torrente", oculta: false }]);
+});

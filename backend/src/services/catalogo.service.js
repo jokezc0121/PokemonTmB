@@ -267,6 +267,9 @@ function pokemonResumenDTO(cat, p) {
     especieBaseId: p.especieBaseId,
     sprite: p.sprite,
     tipos: p.tipos.map((t) => tipoDTO(cat, t)),
+    habilidades: p.habilidades
+      .filter((h) => cat.habilidades.has(h.id))
+      .map((h) => ({ id: h.id, nombre: cat.habilidades.get(h.id).nombre, oculta: h.oculta })),
     base: p.base,
     total: p.total,
     roles: p.roles,
