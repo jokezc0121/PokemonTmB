@@ -376,4 +376,4 @@ Todo lo que el usuario sube o el sistema genera se guarda en dos lugares: el arc
 
 ### Diagrama entidad-relación
 
-![Diagrama entidad-relación del Pokémon Team Builder](anexos/pokemonBDWeb.jpg)
+![Diagrama entidad-relación del Pokémon Team Builder](anexos/pokemonBDweb.jpg)
