@@ -43,6 +43,25 @@ function enviando(boton, texto) {
 
 const enfocarPrimerError = form => form.querySelector(".invalido")?.focus();
 
+const CAMPOS_FORM = { correo: "correo", contrasena: "clave", nombreEntrenador: "nombre" };
+
+function paginaDestino() {
+  const volver = new URLSearchParams(location.search).get("volver");
+  return volver && /^[\w-]+\.html(\?.*)?$/.test(volver) ? volver : "index.html#menu";
+}
+
+function mostrarErroresServidor(form, error) {
+  error.detalles.forEach(d => { if (CAMPOS_FORM[d.campo]) mostrarError(CAMPOS_FORM[d.campo], d.mensaje); });
+  $("mensaje").className = "mensaje mensaje-error";
+  $("mensaje").textContent = error.message;
+  enfocarPrimerError(form);
+}
+
+function restaurarBoton(boton, texto) {
+  boton.disabled = false;
+  boton.textContent = texto;
+}
+
 // Valida al salir del campo y, si ya tenía error, mientras escribe
 function validarAlSalir(id, validador) {
   const input = $(id);
@@ -60,7 +79,7 @@ if (formLogin) {
   validarAlSalir("correo", validarCorreo);
   validarAlSalir("clave", validarClave);
 
-  formLogin.addEventListener("submit", e => {
+  formLogin.addEventListener("submit", async e => {
     e.preventDefault();
     const mensaje = $("mensaje");
     mensaje.textContent = "";
@@ -70,13 +89,19 @@ if (formLogin) {
     const claveOk = validarClave();
     if (!correoOk || !claveOk) return enfocarPrimerError(formLogin);
 
+    const textoBoton = $("enviar").textContent;
     enviando($("enviar"), "Entrando...");
-    setTimeout(() => {
+    try {
+      const r = await api.post("/auth/login", { correo: $("correo").value.trim(), contrasena: $("clave").value });
+      sesionLocal.guardar(r.data.token, r.data.usuario);
       mensaje.className = "mensaje mensaje-exito";
       mensaje.textContent = "¡Bienvenido! Te llevamos al menú...";
       UI.avisoSiguientePagina("Iniciaste sesión correctamente.", "exito");
-      setTimeout(() => location.href = "index.html#menu", 800);
-    }, 700);
+      location.href = paginaDestino();
+    } catch (error) {
+      mostrarErroresServidor(formLogin, error);
+      restaurarBoton($("enviar"), textoBoton);
+    }
   });
 }
 
@@ -114,7 +139,7 @@ if (formRegistro) {
     if ($("confirmar").value !== "") validarConfirmar();
   });
 
-  formRegistro.addEventListener("submit", e => {
+  formRegistro.addEventListener("submit", async e => {
     e.preventDefault();
     const mensaje = $("mensaje");
     const resultados = [validarNombre(), validarCorreo(), validarClave(), validarConfirmar()];
@@ -126,10 +151,19 @@ if (formRegistro) {
     }
 
     mensaje.textContent = "";
+    const textoBoton = $("enviar").textContent;
     enviando($("enviar"), "Creando cuenta...");
-    setTimeout(() => {
+    try {
+      await api.post("/auth/register", {
+        nombreEntrenador: $("nombre").value.trim(),
+        correo: $("correo").value.trim(),
+        contrasena: $("clave").value
+      });
       UI.avisoSiguientePagina("¡Cuenta creada! Ahora inicia sesión con tu correo.", "exito");
       location.href = "login.html";
-    }, 900);
+    } catch (error) {
+      mostrarErroresServidor(formRegistro, error);
+      restaurarBoton($("enviar"), textoBoton);
+    }
   });
 }

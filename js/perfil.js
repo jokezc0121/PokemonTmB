@@ -86,6 +86,15 @@ selectFavorito.addEventListener("change", () => {
 });
 
 // Inicio
-document.getElementById("nombre-entrenador").textContent = usuario.nombre;
-document.getElementById("correo-entrenador").textContent = usuario.correo;
+document.getElementById("nombre-entrenador").textContent = "";
+document.getElementById("correo-entrenador").textContent = "";
+document.getElementById("bio-entrenador").textContent = "";
 mostrarFavorito();
+
+sesionLista.then(u => {
+  if (!u) return;
+  document.getElementById("nombre-entrenador").textContent = u.nombreEntrenador;
+  document.getElementById("correo-entrenador").textContent = u.correo;
+  document.getElementById("bio-entrenador").textContent = u.biografia || "";
+  if (u.avatar) foto.src = u.avatar.url;
+});
