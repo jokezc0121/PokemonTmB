@@ -14,6 +14,7 @@ Aplicación web full-stack para crear, validar, analizar, guardar y compartir eq
 6. [Alcance](#6-alcance)
 7. [Supuestos y restricciones](#7-supuestos-y-restricciones)
 8. [Arquitectura general](#8-arquitectura-general)
+9. [Modelo de datos](#9-modelo-de-datos)
 
 ---
 
@@ -369,4 +370,10 @@ Todo lo que el usuario sube o el sistema genera se guarda en dos lugares: el arc
 6. **Guardado dual:** el equipo queda en la base de datos y su archivo de exportación en el almacenamiento de ficheros, con sus metadatos registrados.
 7. **Consulta y gestión:** desde "Mis equipos" el usuario edita, duplica, elimina, descarga o comparte sus equipos y revisa versiones anteriores.
 8. **Cierre de sesión:** el logout invalida la sesión y devuelve al usuario a la landing.
+---
 
+## 9. Modelo de datos
+
+### Diagrama entidad-relación
+
+![Diagrama entidad-relación del Pokémon Team Builder](anexos/pokemonBDWeb.jpg)
