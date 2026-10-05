@@ -36,7 +36,7 @@ const contrasena = z
   .string({ error: "La contraseña es obligatoria." })
   .min(8, "La contraseña debe tener al menos 8 caracteres.")
   .max(72, "La contraseña no puede superar 72 caracteres.")
-  .regex(/[A-Za-z]/, "La contraseña debe tener al menos una letra.")
+  .regex(/\p{L}/u, "La contraseña debe tener al menos una letra.")
   .regex(/\d/, "La contraseña debe tener al menos un número.");
 
 const correo = z

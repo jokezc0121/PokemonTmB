@@ -163,3 +163,10 @@ test("el listado de pokemon incluye sus habilidades", () => {
   const dto = pokemonResumenDTO(cat, cat.pokemon.get(3));
   assert.deepEqual(dto.habilidades, [{ id: 2, nombre: "Torrente", oculta: false }]);
 });
+
+test("la contraseña acepta letras con tilde y exige un número", () => {
+  const datos = { nombreEntrenador: "Ash", correo: "ash@correo.com" };
+  assert.equal(esquemas.registro.safeParse({ ...datos, contrasena: "ñañañaña1" }).success, true);
+  assert.equal(esquemas.registro.safeParse({ ...datos, contrasena: "ñañañañañ" }).success, false);
+  assert.equal(esquemas.registro.safeParse({ ...datos, contrasena: "12345678" }).success, false);
+});
