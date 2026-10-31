@@ -242,6 +242,23 @@ const aPokemonFront = p => ({
 });
 
 async function cargarPokemones() {
-  const r = await api.get("/pokemon?limite=1000&orden=nombre");
-  POKEMONES.splice(0, POKEMONES.length, ...r.data.map(aPokemonFront));
+  const todos = [];
+  let pagina = 1;
+  let totalPaginas = 1;
+
+  do {
+    const respuesta = await api.get(
+      `/pokemon?limite=1000&pagina=${pagina}&orden=nombre&incluirMegas=true`
+    );
+
+    todos.push(...respuesta.data.map(aPokemonFront));
+
+    totalPaginas = respuesta.meta.paginas;
+    pagina++;
+
+  } while (pagina <= totalPaginas);
+
+  POKEMONES.splice(0, POKEMONES.length, ...todos);
+
+  console.log("Pokémon cargados:", POKEMONES.length);
 }
