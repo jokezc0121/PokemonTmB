@@ -227,3 +227,38 @@ const htmlBarraStat = (nombre, valor, clase = "") => `
     <div class="barra"><i style="width:${Math.min(valor / 160 * 100, 100)}%"></i></div>
     <b>${valor}</b>
   </div>`;
+
+const NOMBRE_TIPO_FRONT = { Pelea: "Lucha", Psiquico: "Psíquico", Electrico: "Eléctrico", Dragon: "Dragón" };
+
+const aPokemonFront = p => ({
+  id: p.id,
+  nombre: p.nombreMostrar,
+  tipos: p.tipos.filter(Boolean).map(t => NOMBRE_TIPO_FRONT[t.nombre] || t.nombre),
+  base: p.base,
+  imagen: p.sprite,
+  habilidades: (p.habilidades || []).filter(h => !h.oculta).map(h => h.nombre),
+  oculta: (p.habilidades || []).find(h => h.oculta)?.nombre || "",
+  movimientos: (p.movimientos || []).map(m => m.nombre)
+});
+
+async function cargarPokemones() {
+  const todos = [];
+  let pagina = 1;
+  let totalPaginas = 1;
+
+  do {
+    const respuesta = await api.get(
+      `/pokemon?limite=1000&pagina=${pagina}&orden=nombre&incluirMegas=true`
+    );
+
+    todos.push(...respuesta.data.map(aPokemonFront));
+
+    totalPaginas = respuesta.meta.paginas;
+    pagina++;
+
+  } while (pagina <= totalPaginas);
+
+  POKEMONES.splice(0, POKEMONES.length, ...todos);
+
+  console.log("Pokémon cargados:", POKEMONES.length);
+}

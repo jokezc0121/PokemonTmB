@@ -171,6 +171,10 @@ const UI = (() => {
         });
         if (!si) return;
         window.salidaConfirmada = true;
+        if (typeof api !== "undefined") {
+          try { await api.post("/auth/logout"); } catch (e) {}
+          sesionLocal.borrar();
+        }
         avisoSiguientePagina("Cerraste sesión. ¡Hasta pronto!", "exito");
         location.href = "login.html";
       }));

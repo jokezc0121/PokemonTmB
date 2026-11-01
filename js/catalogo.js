@@ -83,5 +83,11 @@ filtroTipo.addEventListener("change", mostrarCatalogo);
 ordenar.addEventListener("change", mostrarCatalogo);
 botonLimpiar.addEventListener("click", limpiarFiltros);
 
-cargarTipos();
-mostrarCatalogo();
+tabla.innerHTML = `<tr><td colspan="13" class="vacio">Cargando catálogo...</td></tr>`;
+
+cargarPokemones()
+  .catch(error => UI.aviso(`No se pudo cargar el catálogo: ${error.message}`, "error"))
+  .finally(() => {
+    cargarTipos();
+    mostrarCatalogo();
+  });
