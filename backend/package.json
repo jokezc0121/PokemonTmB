@@ -13,7 +13,6 @@
   "description": "API REST del Pokémon Team Builder (Express + Supabase)",
   "dependencies": {
     "@resvg/resvg-js": "^2.6.2",
-    "@supabase/server": "^1.9.2",
     "@supabase/supabase-js": "^2.117.2",
     "bcryptjs": "^3.0.3",
     "cors": "^2.8.6",
