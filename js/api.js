@@ -20,13 +20,23 @@ const sesionLocal = {
   guardar: (token, usuario) => {
     localStorage.setItem(CLAVE_TOKEN, token);
     localStorage.setItem(CLAVE_USUARIO, JSON.stringify(usuario));
+    avisarCambioUsuario(usuario);
   },
-  actualizarUsuario: usuario => localStorage.setItem(CLAVE_USUARIO, JSON.stringify(usuario)),
+  actualizarUsuario: usuario => {
+    localStorage.setItem(CLAVE_USUARIO, JSON.stringify(usuario));
+    avisarCambioUsuario(usuario);
+  },
   borrar: () => {
     localStorage.removeItem(CLAVE_TOKEN);
     localStorage.removeItem(CLAVE_USUARIO);
+    avisarCambioUsuario(null);
   }
 };
+
+function avisarCambioUsuario(usuario) {
+  document.dispatchEvent(new CustomEvent("sesion:usuario", { detail: usuario }));
+}
+ 
 
 const paginaActual = () => location.pathname.split("/").pop() + location.search;
 

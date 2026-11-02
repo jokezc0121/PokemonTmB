@@ -4,6 +4,11 @@ const buscador = document.getElementById("buscar");
 const filtroTipo = document.getElementById("filtro-tipo");
 const ordenar = document.getElementById("ordenar");
 const botonLimpiar = document.getElementById("limpiar");
+const botonMas = document.getElementById("mostrar-mas");
+
+// Cuántos Pokémon se muestran por tanda
+const POR_PAGINA = 10;
+let visibles = POR_PAGINA;
 
 function cargarTipos() {
   const tipos = [...new Set(POKEMONES.flatMap(p => p.tipos))].sort();
@@ -45,8 +50,9 @@ function mostrarCatalogo() {
     orden
   );
 
+  const pagina = lista.slice(0, visibles);
   tabla.innerHTML = lista.length
-    ? lista.map(p => filaPokemon(p, orden)).join("")
+    ? pagina.map(p => filaPokemon(p, orden)).join("")
     : `<tr><td colspan="13" class="vacio">No hay Pokémon que coincidan con tu búsqueda.<br>
        Revisa cómo está escrito o <button type="button" class="enlace-boton" id="limpiar-vacio">limpia los filtros</button>.</td></tr>`;
   document.getElementById("limpiar-vacio")?.addEventListener("click", limpiarFiltros);
@@ -57,6 +63,13 @@ function mostrarCatalogo() {
     : `${POKEMONES.length} Pokémon en el catálogo`;
   botonLimpiar.hidden = !hayFiltros;
 
+  // Botón "Mostrar más": solo aparece si quedan Pokémon por ver
+  const restantes = lista.length - pagina.length;
+  document.getElementById("paginacion").hidden = lista.length === 0;
+  document.getElementById("contador-visibles").textContent = `Viendo ${pagina.length} de ${lista.length}`;
+  botonMas.hidden = restantes <= 0;
+  botonMas.textContent = `Mostrar ${Math.min(POR_PAGINA, restantes)} más`;
+
   document.querySelectorAll(".ordenable").forEach(b => {
     const activo = b.dataset.orden === orden;
     b.classList.toggle("activo", activo);
@@ -64,10 +77,16 @@ function mostrarCatalogo() {
   });
 }
 
+// Al cambiar la búsqueda, el filtro o el orden se vuelve a empezar desde los primeros 10
+function reiniciarCatalogo() {
+  visibles = POR_PAGINA;
+  mostrarCatalogo();
+}
+
 function limpiarFiltros() {
   buscador.value = "";
   filtroTipo.value = "";
-  mostrarCatalogo();
+  reiniciarCatalogo();
   buscador.focus();
 }
 
@@ -75,13 +94,21 @@ function limpiarFiltros() {
 document.querySelectorAll(".ordenable").forEach(b =>
   b.addEventListener("click", () => {
     ordenar.value = b.dataset.orden;
-    mostrarCatalogo();
+    reiniciarCatalogo();
   }));
 
-buscador.addEventListener("input", mostrarCatalogo);
-filtroTipo.addEventListener("change", mostrarCatalogo);
-ordenar.addEventListener("change", mostrarCatalogo);
+buscador.addEventListener("input", reiniciarCatalogo);
+filtroTipo.addEventListener("change", reiniciarCatalogo);
+ordenar.addEventListener("change", reiniciarCatalogo);
 botonLimpiar.addEventListener("click", limpiarFiltros);
+
+botonMas.addEventListener("click", () => {
+  const primeraNueva = visibles;
+  visibles += POR_PAGINA;
+  mostrarCatalogo();
+  // Lleva el foco a la primera fila nueva para quien navega con teclado
+  tabla.rows[primeraNueva]?.querySelector("a")?.focus({ preventScroll: true });
+});
 
 tabla.innerHTML = `<tr><td colspan="13" class="vacio">Cargando catálogo...</td></tr>`;
 

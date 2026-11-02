@@ -204,6 +204,43 @@ body.sin-scroll {
   color: var(--gris);
 }
 
+/* Nombre del usuario con sesión, en la esquina derecha de la barra */
+.nav-usuario {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  max-width: 260px;
+  padding: 8px 12px;
+  font-size: 10px;
+  color: var(--amarillo);
+  background-color: var(--noche);
+  border: 3px solid var(--amarillo);
+}
+ 
+.nav-usuario:hover {
+  border-color: var(--rosa);
+}
+ 
+.nav-usuario-nombre {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+ 
+/* Mini pokébola dibujada con CSS */
+.nav-usuario-icono {
+  flex: none;
+  width: 14px;
+  height: 14px;
+  border: 2px solid var(--amarillo);
+  border-radius: 50%;
+  background: linear-gradient(var(--rosa) 0 45%, var(--amarillo) 45% 55%, var(--texto) 55%);
+}
+ 
+[hidden] {
+  display: none !important;
+}
+ 
 .footer-enlaces {
   margin-bottom: 10px;
 }
@@ -544,7 +581,8 @@ abbr[title] {
 }
 
 .campo input,
-.campo select {
+.campo select,
+.campo textarea {
   width: 100%;
   padding: 12px;
   font-size: 16px;
@@ -555,13 +593,15 @@ abbr[title] {
 }
 
 .campo input:focus,
-.campo select:focus {
+.campo select:focus,
+.campo textarea:focus {
   outline: none;
   border-color: var(--naranja);
 }
 
 .campo input.invalido,
-.campo select.invalido {
+.campo select.invalido,
+.campo textarea.invalido {
   border-color: var(--rosa);
   background-color: #2a0418;
 }
@@ -751,7 +791,6 @@ abbr[title] {
   position: relative;
   overflow-x: auto;
 }
-
 .sprite {
   width: 48px;
   height: 48px;
@@ -776,6 +815,9 @@ abbr[title] {
   .nav-enlace {
     font-size: 9px;
     padding: 8px 4px;
+  }
+  .nav-usuario {
+    max-width: 100%;
   }
   .modal-botones .boton {
     width: 100%;
@@ -1162,6 +1204,24 @@ abbr[title] {
 
 .barra-resultados .ayuda {
   margin: 0;
+}
+
+/* Botón "Mostrar más" debajo de la tabla del catálogo */
+.mostrar-mas {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.mostrar-mas .ayuda {
+  margin: 0;
+}
+
+.panel .mostrar-mas .boton {
+  width: auto;
+  min-width: 240px;
 }
 
 .ordenable {
@@ -1700,6 +1760,31 @@ abbr[title] {
   margin-top: 24px;
 }
 
+/* Formulario para editar el perfil */
+#form-perfil {
+  max-width: 560px;
+}
+
+.campo textarea {
+  resize: vertical;
+  min-height: 100px;
+  line-height: 1.5;
+}
+
+.botones-perfil {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.panel .botones-perfil .boton {
+  width: auto;
+}
+
+#form-perfil .mensaje {
+  text-align: left;
+}
+
 @media (max-width: 600px) {
   .perfil,
   .favorito {
@@ -1711,6 +1796,9 @@ abbr[title] {
   }
   .cambiar-favorito {
     max-width: none;
+  }
+  .panel .botones-perfil .boton {
+    width: 100%;
   }
   .perfil-resumen {
     justify-content: center;
@@ -1761,4 +1849,3 @@ abbr[title] {
   border-left: 4px solid var(--rosa);
   padding-left: 12px;
 }
-

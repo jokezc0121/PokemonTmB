@@ -153,14 +153,18 @@ if (formRegistro) {
     mensaje.textContent = "";
     const textoBoton = $("enviar").textContent;
     enviando($("enviar"), "Creando cuenta...");
-    try {
-      await api.post("/auth/register", {
+      try {
+      
+      const r = await api.post("/auth/register", {
         nombreEntrenador: $("nombre").value.trim(),
         correo: $("correo").value.trim(),
         contrasena: $("clave").value
       });
-      UI.avisoSiguientePagina("¡Cuenta creada! Ahora inicia sesión con tu correo.", "exito");
-      location.href = "login.html";
+      sesionLocal.guardar(r.data.token, r.data.usuario);
+      mensaje.className = "mensaje mensaje-exito";
+      mensaje.textContent = "¡Cuenta creada! Te llevamos al menú...";
+      UI.avisoSiguientePagina(`¡Cuenta creada! Bienvenido, ${r.data.usuario.nombreEntrenador}.`, "exito");
+      location.href = paginaDestino();
     } catch (error) {
       mostrarErroresServidor(formRegistro, error);
       restaurarBoton($("enviar"), textoBoton);

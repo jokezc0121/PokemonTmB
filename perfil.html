@@ -49,9 +49,49 @@
 
         <ul class="perfil-resumen">
           <li><strong>3</strong>Equipos</li>
-          <li><strong>Doble</strong>Formato favorito</li>
+          <li><strong id="resumen-formato">—</strong>Formato favorito</li>
         </ul>
       </div>
+    </section>
+
+    <!-- Editar datos del perfil -->
+    <section class="panel">
+      <h2>Editar perfil</h2>
+
+      <form id="form-perfil" novalidate>
+        <div class="campo">
+          <label for="editar-nombre">Nombre de entrenador</label>
+          <input type="text" id="editar-nombre" name="nombreEntrenador" autocomplete="username"
+                 required minlength="3" maxlength="30" aria-describedby="pista-editar-nombre error-editar-nombre">
+          <small class="pista" id="pista-editar-nombre">Entre 3 y 30 caracteres.</small>
+          <span class="error" id="error-editar-nombre" aria-live="polite"></span>
+        </div>
+
+        <div class="campo">
+          <label for="editar-biografia">Biografía</label>
+          <textarea id="editar-biografia" name="biografia" rows="4" maxlength="300"
+                    placeholder="Ej. Jugador de Combate Doble. Me gustan los equipos de lluvia."
+                    aria-describedby="contador-biografia error-editar-biografia"></textarea>
+          <small class="pista" id="contador-biografia">0 / 300 caracteres</small>
+          <span class="error" id="error-editar-biografia" aria-live="polite"></span>
+        </div>
+
+        <div class="campo">
+          <label for="editar-formato">Formato favorito</label>
+          <select id="editar-formato" name="formatoPreferido" aria-describedby="error-editar-formato">
+            <option value="">Sin preferencia</option>
+            <option value="individual">Individual</option>
+            <option value="doble">Doble</option>
+          </select>
+          <span class="error" id="error-editar-formato" aria-live="polite"></span>
+        </div>
+
+        <div class="botones-perfil">
+          <button type="submit" class="boton boton-principal" id="actualizar-perfil" disabled>Actualizar perfil</button>
+          <button type="button" class="boton boton-secundario" id="descartar-perfil" disabled>Descartar cambios</button>
+        </div>
+        <p class="mensaje" id="mensaje-perfil" role="status" aria-live="polite"></p>
+      </form>
     </section>
 
     <!-- Pokémon favorito -->

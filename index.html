@@ -13,15 +13,17 @@
 <body>
   <a class="saltar" href="#contenido">Saltar al contenido</a>
 
-  <!-- Barra de navegación -->
+   <!-- Barra de navegación -->
   <header class="navbar">
     <div class="contenedor">
       <a href="index.html" class="logo" aria-label="TeamBuilder, ir al inicio"><img src="img/logo.png" alt="" class="logo-img">Team<span>Builder</span></a>
       <nav aria-label="Navegación principal">
         <a href="#menu" class="nav-enlace">Menú</a>
         <a href="ayuda.html" class="nav-enlace">Ayuda</a>
-        <a href="login.html" class="boton boton-secundario">Iniciar sesión</a>
-        <a href="register.html" class="boton boton-principal">Crear cuenta</a>
+        <a href="login.html" class="boton boton-secundario" data-solo-invitado>Iniciar sesión</a>
+        <a href="register.html" class="boton boton-principal" data-solo-invitado>Crear cuenta</a>
+        <a href="perfil.html" class="nav-enlace" data-solo-sesion hidden>Mi perfil</a>
+        <a href="login.html" class="nav-enlace nav-salir" data-accion="salir" data-solo-sesion hidden>Cerrar sesión</a>
       </nav>
     </div>
   </header>
@@ -36,13 +38,14 @@
         Guarda tus equipos en tu cuenta y compártelos con otros jugadores.
       </p>
       <div class="botones">
-        <a href="register.html" class="boton boton-principal">Crear cuenta gratis</a>
-        <a href="login.html" class="boton boton-secundario">Iniciar sesión</a>
+        <a href="register.html" class="boton boton-principal" data-solo-invitado>Crear cuenta gratis</a>
+        <a href="login.html" class="boton boton-secundario" data-solo-invitado>Iniciar sesión</a>
+        <a href="#menu" class="boton boton-principal" data-solo-sesion hidden>Ir al menú</a>
       </div>
     </section>
- 
+
     <div class="fila-menu contenedor">
- 
+
     <!-- Menú del Team Builder -->
     <section class="seccion" id="menu">
       <h2>Menú principal</h2>
@@ -140,7 +143,7 @@
       <p>(Proyecto académico sin fines comerciales. Pokémon es marca de Nintendo, Creatures Inc. y GAME FREAK.)</p>
     </div>
   </footer>
-
+<script src="js/api.js"></script>
   <script src="js/ui.js"></script>
 </body>
 </html>

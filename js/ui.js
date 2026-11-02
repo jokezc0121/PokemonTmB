@@ -183,6 +183,44 @@ const UI = (() => {
       b.addEventListener("click", e => { e.preventDefault(); mostrarAtajos(); }));
   }
 
+
+  
+  // Código del nombre de usuario en la esquina derecha de la barra
+  function pintarUsuario(usuario) {
+    const barra = document.querySelector(".navbar .contenedor");
+    if (!barra) return;
+ 
+    let chip = document.getElementById("nav-usuario");
+    const hayToken = typeof sesionLocal !== "undefined" && sesionLocal.token();
+    const nombre = hayToken && usuario && usuario.nombreEntrenador;
+ 
+    // Partes de la página que solo se ven con o sin sesión (p. ej. botones de login en el inicio)
+    document.querySelectorAll("[data-solo-invitado]").forEach(el => { el.hidden = !!nombre; });
+    document.querySelectorAll("[data-solo-sesion]").forEach(el => { el.hidden = !nombre; });
+ 
+    if (!nombre) { chip?.remove(); return; }
+ 
+    if (!chip) {
+      chip = document.createElement("a");
+      chip.id = "nav-usuario";
+      chip.className = "nav-usuario";
+      chip.href = "perfil.html";
+      chip.innerHTML = '<span class="nav-usuario-icono" aria-hidden="true"></span><span class="nav-usuario-nombre"></span>';
+      barra.appendChild(chip);
+    }
+    // textContent evita inyectar HTML desde el nombre que escribió el usuario
+    chip.querySelector(".nav-usuario-nombre").textContent = nombre;
+    chip.title = `Sesión iniciada como ${nombre}. Ver mi perfil`;
+    chip.setAttribute("aria-label", `Sesión iniciada como ${nombre}. Ir a mi perfil`);
+  }
+ 
+  // Se repinta cuando cambia la sesión: login, registro, /auth/me o logout
+  document.addEventListener("sesion:usuario", e => pintarUsuario(e.detail));
+  // Y si otra pestaña inicia o cierra sesión
+  window.addEventListener("storage", e => {
+    if (e.key === null || e.key.startsWith("ptb_")) pintarUsuario(sesionLocal.usuario());
+  });
+ 
   // Código de las imágenes que no cargan
   const IMAGEN_RESPALDO = "data:image/svg+xml," + encodeURIComponent(
     "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'>" +
@@ -216,6 +254,7 @@ const UI = (() => {
     conectarCerrarSesion();
     conectarVerClave();
     mostrarAvisoPendiente();
+    if (typeof sesionLocal !== "undefined") pintarUsuario(sesionLocal.usuario());
   });
 
   return { aviso, avisoSiguientePagina, confirmar, cerrarModal, mostrarAtajos };
