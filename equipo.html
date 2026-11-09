@@ -20,6 +20,7 @@
       <nav aria-label="Navegación principal">
         <a href="index.html#menu" class="nav-enlace">Menú</a>
         <a href="equipo.html" class="nav-enlace">Crear equipo</a>
+        <a href="mis-equipos.html" class="nav-enlace">Mis equipos</a>
         <a href="catalogo.html" class="nav-enlace">Catálogo</a>
         <a href="perfil.html" class="nav-enlace">Mi perfil</a>
         <a href="ayuda.html" class="nav-enlace">Ayuda</a>
@@ -30,10 +31,27 @@
 
   <main class="contenedor editor" id="contenido">
     <div class="titulo-con-estado">
-      <h1>Crear equipo</h1>
+      <h1 id="titulo-pagina">Crear equipo</h1>
       <!-- H1: el usuario siempre sabe si su trabajo está guardado -->
       <p class="estado-guardado" id="estado-guardado" role="status" aria-live="polite">Sin cambios</p>
     </div>
+
+    <!-- Error al cargar el catálogo o el equipo desde la base de datos -->
+    <div class="panel caja-error" id="error-carga" role="alert" hidden></div>
+
+    <!-- Importar un .txt exportado: el equipo se carga en el editor para revisarlo y guardarlo -->
+    <section class="panel panel-importar" id="importar" aria-labelledby="titulo-importar">
+      <div class="fila-importar">
+        <div>
+          <h2 id="titulo-importar">Importar equipo</h2>
+          <p class="pista">Carga un archivo .txt exportado desde esta página. Podrás revisarlo y guardarlo.</p>
+        </div>
+        <label class="boton boton-secundario boton-archivo">Importar TXT
+          <input type="file" id="importar-txt" accept=".txt,text/plain" class="solo-lectores">
+        </label>
+      </div>
+      <div id="resultado-importar" aria-live="assertive"></div>
+    </section>
 
     <!-- Pasos visibles: el usuario sabe qué sigue (H6 + H10) -->
     <ol class="guia-pasos" aria-label="Pasos para crear un equipo">
@@ -105,12 +123,23 @@
           <p class="aviso" id="aviso">Agrega Pokémon para ver el análisis.</p>
         </section>
 
+        <!-- Tipos a los que el equipo es débil (calculado por la API con la tabla de tipos) -->
+        <section class="panel" aria-labelledby="titulo-debilidades">
+          <h2 id="titulo-debilidades">Debilidades del equipo</h2>
+          <div id="debilidades" aria-live="polite"><p class="ayuda">Agrega Pokémon para ver sus debilidades.</p></div>
+        </section>
+
         <section class="panel panel-guardar" aria-labelledby="titulo-guardar">
           <h2 id="titulo-guardar">Antes de guardar</h2>
           <!-- H5 + H6: los requisitos se ven y se marcan antes de intentar guardar -->
           <ul class="requisitos" id="requisitos-equipo"></ul>
           <button type="button" class="boton boton-principal" id="guardar">Guardar equipo <small class="atajo-boton">Ctrl + S</small></button>
           <ul class="mensaje-lista" id="mensaje" aria-live="polite"></ul>
+          <!-- Aparece al guardar: descarga el equipo en un .txt que luego se puede importar -->
+          <div class="exportar" id="zona-exportar" hidden>
+            <button type="button" class="boton boton-secundario" id="exportar-txt">Exportar TXT</button>
+            <small class="pista" id="pista-exportar">Descarga el equipo guardado en un archivo .txt.</small>
+          </div>
         </section>
       </div>
     </div>
@@ -121,6 +150,7 @@
   <script src="js/datos.js"></script>
   <script src="js/editor.js"></script>
   <script src="js/analisis.js"></script>
+  <script src="js/formato-txt.js"></script>
   <script src="js/equipo.js"></script>
 </body>
 </html>

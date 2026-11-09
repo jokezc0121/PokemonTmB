@@ -3,6 +3,8 @@ let equipo = [];
 let seleccionado = -1;
 let hayCambios = false;
 let ultimoQuitado = null;
+let equipoId = null;       // id del equipo en la BD (null = equipo nuevo)
+let guardadoEnBd = false;  // true cuando lo que se ve en pantalla ya está guardado (habilita Exportar TXT)
 
 const listaCatalogo = document.getElementById("catalogo");
 const listaRanuras = document.getElementById("ranuras");
@@ -11,15 +13,29 @@ const inputNombre = document.getElementById("nombre-equipo");
 const estadoGuardado = document.getElementById("estado-guardado");
 const CLAVE_BORRADOR = "borrador-equipo";
 
+// Naturaleza inicial: "Fuerte" si existe en la BD; si no, la primera neutra o la primera de la lista
+const naturalezaPorDefecto = () =>
+  (NATURALEZAS.find(n => n.nombre === "Fuerte") || NATURALEZAS.find(n => !n.sube) || NATURALEZAS[0])?.nombre || "";
+
 const crearIntegrante = pokemon => ({
   pokemon,
   apodo: "",
-  habilidad: pokemon.habilidades[0],
+  habilidad: pokemon.habilidades[0] || pokemon.oculta || "",
   objeto: "Ninguno",
-  naturaleza: "Fuerte",
+  naturaleza: naturalezaPorDefecto(),
   movimientos: ["", "", "", ""],
-  evs: { ps: 0, atq: 0, def: 0, ate: 0, dfe: 0, vel: 0 }
+  evs: { ps: 0, atq: 0, def: 0, ate: 0, dfe: 0, vel: 0 },
+  ivs: { ps: 31, atq: 31, def: 31, ate: 31, dfe: 31, vel: 31 },
+  nivel: NIVEL
 });
+
+// El listado del catálogo no trae los movimientos: se piden a la API (GET /pokemon/:id) al agregar el Pokémon
+async function conMovimientos(pokemon) {
+  if (pokemon.movimientosCargados) return pokemon;
+  const respuesta = await api.get(`/pokemon/${pokemon.id}`);
+  Object.assign(pokemon, aPokemonFront(respuesta.data), { movimientosCargados: true });
+  return pokemon;
+}
 
 const nombreDe = integrante => integrante.apodo || integrante.pokemon.nombre;
 const estaEnEquipo = pokemon => equipo.some(i => i.pokemon === pokemon);
@@ -33,12 +49,17 @@ function pintarEstado(texto, clase = "") {
 
 function marcarCambios() {
   hayCambios = true;
+  guardadoEnBd = false;
   pintarEstado("● Cambios sin guardar", "pendiente");
   guardarBorrador();
   mostrarRequisitos();
+  mostrarExportar();
+  programarDebilidades();
 }
 
+// El borrador local solo se usa para equipos nuevos; un equipo ya guardado se recupera de la BD
 function guardarBorrador() {
+  if (equipoId) return;
   try { localStorage.setItem(CLAVE_BORRADOR, JSON.stringify(datosDelEquipo())); } catch (e) {}
 }
 
@@ -46,7 +67,7 @@ function borrarBorrador() {
   try { localStorage.removeItem(CLAVE_BORRADOR); } catch (e) {}
 }
 
-function cargarBorrador() {
+async function cargarBorrador() {
   let datos = null;
   try { datos = JSON.parse(localStorage.getItem(CLAVE_BORRADOR)); } catch (e) {}
   if (!datos?.integrantes?.length) return false;
@@ -56,16 +77,19 @@ function cargarBorrador() {
   cargarArquetipos();
   selectArquetipo.value = datos.arquetipo === "Libre" ? "" : (datos.arquetipo || "");
 
-  equipo = datos.integrantes
-    .filter(d => buscarPokemon(d.pokemon))
+  const guardados = datos.integrantes.filter(d => buscarPokemon(d.pokemon));
+  await Promise.all(guardados.map(d => conMovimientos(buscarPokemon(d.pokemon)).catch(() => null)));
+  equipo = guardados
     .map(d => ({
       ...crearIntegrante(buscarPokemon(d.pokemon)),
       apodo: d.apodo || "",
       habilidad: d.habilidad || buscarPokemon(d.pokemon).habilidades[0],
       objeto: d.objeto || "Ninguno",
-      naturaleza: d.naturaleza || "Fuerte",
+      naturaleza: d.naturaleza || naturalezaPorDefecto(),
       movimientos: [...(d.movimientos || []), "", "", "", ""].slice(0, 4),
-      evs: { ps: 0, atq: 0, def: 0, ate: 0, dfe: 0, vel: 0, ...d.evs }
+      evs: { ps: 0, atq: 0, def: 0, ate: 0, dfe: 0, vel: 0, ...d.evs },
+      ivs: { ps: 31, atq: 31, def: 31, ate: 31, dfe: 31, vel: 31, ...d.ivs },
+      nivel: d.nivel || NIVEL
     }));
   seleccionado = equipo.length ? 0 : -1;
   return equipo.length > 0;
@@ -94,7 +118,7 @@ function mostrarCatalogo() {
     li.innerHTML = `${htmlImagen(p)}
       <div><strong>${p.nombre}</strong>${htmlTipos(p.tipos)}</div>
       <button type="button" class="boton-mini"${yaEsta || lleno ? " disabled" : ""} aria-label="${etiqueta}">${texto}</button>`;
-    li.querySelector("button").addEventListener("click", () => agregar(p));
+    li.querySelector("button").addEventListener("click", e => agregar(p, e.currentTarget));
     listaCatalogo.appendChild(li);
   });
 
@@ -110,8 +134,20 @@ function mostrarCatalogo() {
 }
 
 // Código de agregar, quitar y vaciar
-function agregar(pokemon) {
+async function agregar(pokemon, boton) {
   if (equipo.length >= 6 || estaEnEquipo(pokemon)) return;
+  if (boton) {
+    boton.disabled = true;
+    boton.innerHTML = '<span class="cargando" aria-hidden="true"></span>Cargando';
+  }
+  try {
+    await conMovimientos(pokemon);
+  } catch (error) {
+    UI.aviso(`No se pudieron cargar los movimientos de ${pokemon.nombre}: ${error.message}`, "error");
+    mostrarCatalogo();
+    return;
+  }
+  if (equipo.length >= 6 || estaEnEquipo(pokemon)) return mostrarCatalogo();
   equipo.push(crearIntegrante(pokemon));
   seleccionado = equipo.length - 1;
   actualizarTodo();
@@ -237,7 +273,9 @@ const datosDelEquipo = () => ({
     objeto: i.objeto,
     naturaleza: i.naturaleza,
     movimientos: i.movimientos.filter(m => m !== ""),
-    evs: i.evs
+    evs: i.evs,
+    ivs: i.ivs,
+    nivel: i.nivel
   }))
 });
 
@@ -256,27 +294,170 @@ function mostrarErrores(pendientes) {
   UI.aviso(`No se pudo guardar: ${pendientes.length} ${pendientes.length === 1 ? "cosa" : "cosas"} por corregir.`, "error");
 }
 
-function guardar() {
+// Lo que se envía a la API: los nombres vienen del catálogo de la BD y el backend los vuelve a validar
+const datosParaApi = () => ({
+  nombre: inputNombre.value.trim(),
+  formato: FORMATO_TXT[selectFormato.value] || "individual",
+  arquetipo: selectArquetipo.value || null,
+  integrantes: equipo.map(i => ({
+    pokemon: i.pokemon.id,
+    apodo: i.apodo || null,
+    habilidad: i.habilidad || null,
+    objeto: i.objeto === "Ninguno" ? null : i.objeto,
+    naturaleza: i.naturaleza || null,
+    movimientos: i.movimientos.filter(m => m !== ""),
+    evs: i.evs,
+    ivs: i.ivs,
+    nivel: i.nivel
+  }))
+});
+
+// Errores del servidor (400/422): se muestran con el nombre del Pokémon afectado
+function mostrarErroresServidor(error) {
+  const lista = document.getElementById("mensaje");
+  lista.innerHTML = "";
+  const detalles = error.detalles.length ? error.detalles : [{ campo: null, mensaje: error.message }];
+  detalles.forEach(d => {
+    const m = /^integrantes\[(\d+)\]/.exec(d.campo || "");
+    const integrante = m ? equipo[Number(m[1])] : null;
+    const li = document.createElement("li");
+    li.className = "mal";
+    li.innerHTML = '<span></span>' + (integrante ? ' <button type="button" class="enlace-boton">Corregir →</button>' : "");
+    li.querySelector("span").textContent = (integrante ? `${nombreDe(integrante)}: ` : "") + d.mensaje;
+    li.querySelector("button")?.addEventListener("click", () => seleccionar(Number(m[1])));
+    lista.appendChild(li);
+  });
+}
+
+function pintarTitulo() {
+  const titulo = equipoId ? "Editar equipo" : "Crear equipo";
+  document.getElementById("titulo-pagina").textContent = titulo;
+  document.title = `${titulo} - Pokémon Team Builder`;
+}
+
+async function guardar() {
+  const boton = document.getElementById("guardar");
+  if (boton.disabled) return;
   const pendientes = requisitos().filter(r => !r.ok);
   if (pendientes.length) return mostrarErrores(pendientes);
 
-  const boton = document.getElementById("guardar");
-  const datos = datosDelEquipo();
+  const datos = datosParaApi();
   boton.disabled = true;
   boton.innerHTML = '<span class="cargando" aria-hidden="true"></span>Guardando...';
   pintarEstado("Guardando...", "pendiente");
+  document.getElementById("mensaje").innerHTML = "";
 
-  setTimeout(() => {
-    hayCambios = false;
+  try {
+    // Equipo nuevo → POST; equipo que ya existe (abierto desde Mis equipos) → PUT
+    const respuesta = equipoId
+      ? await api.put(`/teams/${equipoId}`, datos)
+      : await api.post("/teams", datos);
+
     borrarBorrador();
+    hayCambios = false;
+    guardadoEnBd = true;
+    if (!equipoId) {
+      equipoId = respuesta.data.id;
+      history.replaceState(null, "", `equipo.html?id=${equipoId}`);
+      pintarTitulo();
+    }
     const hora = new Date().toLocaleTimeString("es-CO", { hour: "2-digit", minute: "2-digit" });
     pintarEstado(`✓ Guardado a las ${hora}`, "guardado");
-    document.getElementById("mensaje").innerHTML = `<li class="bien">¡Equipo «${escapar(datos.nombre)}» guardado!</li>`;
-    UI.aviso(`Equipo «${datos.nombre}» guardado.`, "exito");
+    document.getElementById("mensaje").innerHTML =
+      `<li class="bien">¡Equipo «${escapar(datos.nombre)}» guardado! <a href="mis-equipos.html">Ver en Mis equipos →</a></li>`;
+    UI.aviso(`Equipo «${datos.nombre}» guardado en tu cuenta.`, "exito");
+  } catch (error) {
+    pintarEstado("● No se guardó", "pendiente");
+    mostrarErroresServidor(error);
+    UI.aviso(`No se pudo guardar: ${error.message}`, "error");
+  } finally {
     boton.disabled = false;
     boton.innerHTML = TEXTO_GUARDAR;
-  }, 700);
+    mostrarExportar();
+  }
 }
+
+// Código de Exportar TXT: aparece al guardar y descarga lo que quedó guardado
+function mostrarExportar() {
+  const zona = document.getElementById("zona-exportar");
+  zona.hidden = !equipoId;
+  document.getElementById("exportar-txt").disabled = !guardadoEnBd;
+  document.getElementById("pista-exportar").textContent = guardadoEnBd
+    ? "Descarga el equipo guardado en un archivo .txt que luego puedes importar."
+    : "Guarda los cambios para poder exportar el equipo.";
+}
+
+document.getElementById("exportar-txt").addEventListener("click", () => {
+  if (!guardadoEnBd) return;
+  const datos = datosDelEquipo();
+  const texto = exportarTxt({ ...datos, integrantes: equipo });
+  const enlace = document.createElement("a");
+  enlace.href = URL.createObjectURL(new Blob([texto], { type: "text/plain;charset=utf-8" }));
+  enlace.download = `${datos.nombre.replace(/[\\/:*?"<>|]/g, "_") || "equipo"}.txt`;
+  document.body.appendChild(enlace);
+  enlace.click();
+  enlace.remove();
+  setTimeout(() => URL.revokeObjectURL(enlace.href), 1000);
+  UI.aviso(`Se descargó «${enlace.download}».`, "exito");
+});
+
+// Código de Importar TXT: carga el equipo en el editor (no se guarda hasta pulsar Guardar)
+const resultadoImportar = document.getElementById("resultado-importar");
+
+function mostrarCartel(titulo, explicacion, detalles) {
+  resultadoImportar.innerHTML = `
+    <div class="cartel-error" role="alert">
+      <p class="cartel-titulo"></p><p class="cartel-texto"></p><ul class="cartel-lista"></ul>
+    </div>`;
+  resultadoImportar.querySelector(".cartel-titulo").textContent = titulo;
+  resultadoImportar.querySelector(".cartel-texto").textContent = explicacion;
+  detalles.forEach(d => {
+    const li = document.createElement("li");
+    li.textContent = d;
+    resultadoImportar.querySelector(".cartel-lista").appendChild(li);
+  });
+}
+
+document.getElementById("importar-txt").addEventListener("change", async e => {
+  const archivo = e.target.files[0];
+  e.target.value = "";
+  resultadoImportar.innerHTML = "";
+  if (!archivo) return;
+  if (!/\.txt$/i.test(archivo.name) || archivo.size > 100 * 1024) {
+    return mostrarCartel("Archivo no válido", "Elige un archivo .txt de máximo 100 KB.", []);
+  }
+  if (equipo.length && !(await UI.confirmar({
+    titulo: "¿Reemplazar el equipo actual?",
+    mensaje: "El equipo importado ocupará el lugar del que tienes en el editor.",
+    aceptar: "Sí, importar",
+    cancelar: "No, cancelar"
+  }))) return;
+
+  try {
+    const leido = leerTxt(await archivo.text());
+    const integrantes = await resolverTxt(leido, conMovimientos);
+    // Un equipo importado es nuevo: se guarda con POST como un equipo distinto
+    equipoId = null;
+    history.replaceState(null, "", "equipo.html");
+    pintarTitulo();
+    inputNombre.value = (leido.nombre || archivo.name.replace(/\.txt$/i, "")).slice(0, 30);
+    selectFormato.value = leido.formato;
+    cargarArquetipos();
+    equipo = integrantes;
+    seleccionado = 0;
+    actualizarTodo();
+    marcarCambios();
+    UI.aviso(`Se importaron ${equipo.length} Pokémon. Revisa el equipo y pulsa Guardar.`, "exito");
+  } catch (error) {
+    if (error instanceof ErrorTxt && error.tipo === "formato") {
+      mostrarCartel("Formato no válido", "El archivo no tiene el formato de un equipo exportado:", error.detalles);
+    } else if (error instanceof ErrorTxt) {
+      mostrarCartel("Equipo no compatible", "No se cargó el equipo. Esto no existe en el catálogo:", error.detalles);
+    } else {
+      mostrarCartel("No se pudo importar", error.message, []);
+    }
+  }
+});
 
 document.getElementById("guardar").addEventListener("click", guardar);
 
@@ -304,9 +485,8 @@ buscador.addEventListener("keydown", e => {
 
   const primero = filtrarCatalogo().find(p => !estaEnEquipo(p));
   if (primero) {
-    agregar(primero);
     buscador.value = "";
-    mostrarCatalogo();
+    agregar(primero);
   }
 });
 
@@ -314,6 +494,8 @@ buscador.addEventListener("input", mostrarCatalogo);
 
 // Inicio
 function actualizarTodo() {
+  mostrarDebilidades();
+  mostrarExportar();
   mostrarEquipo();
   mostrarEditor();
   mostrarEstadisticas();
@@ -332,28 +514,95 @@ function empezarDeCero() {
   actualizarTodo();
 }
 
-cargarArquetipos();
-
-if (cargarBorrador()) {
-  hayCambios = true;
-  pintarEstado("● Borrador recuperado, sin guardar", "pendiente");
-  UI.aviso("Recuperamos el equipo que estabas armando.", "info", { texto: "Empezar de cero", alHacerClic: empezarDeCero });
+// Convierte un equipo guardado (GET /api/teams/:id) al formato del editor
+async function cargarEquipoGuardado(id) {
+  const { data } = await api.get(`/teams/${id}`);
+  const integrantes = [];
+  for (const i of data.integrantes) {
+    const pokemon = buscarPokemon(i.pokemon.id) || POKEMONES.find(p => p.slug === i.pokemon.nombre);
+    if (!pokemon) continue;
+    await conMovimientos(pokemon);
+    integrantes.push({
+      ...crearIntegrante(pokemon),
+      apodo: i.apodo || "",
+      habilidad: i.habilidad?.nombre || "",
+      objeto: i.objeto?.nombre || "Ninguno",
+      naturaleza: i.naturaleza?.nombre || "",
+      movimientos: [...i.movimientos.map(m => m.nombre), "", "", "", ""].slice(0, 4),
+      evs: i.evs,
+      ivs: i.ivs,
+      nivel: i.nivel
+    });
+  }
+  equipoId = data.id;
+  inputNombre.value = data.nombre;
+  selectFormato.value = FORMATO_SELECT[data.formato] || "Combate Individual";
+  cargarArquetipos();
+  selectArquetipo.value = data.arquetipo || "";
+  equipo = integrantes;
+  seleccionado = equipo.length ? 0 : -1;
+  guardadoEnBd = true;
+  pintarTitulo();
+  pintarEstado("✓ Guardado", "guardado");
 }
 
-// Pokémon que llega desde el catálogo con "?agregar=Nombre"
-const pedido = buscarPokemon(new URLSearchParams(location.search).get("agregar"));
-if (location.search) history.replaceState(null, "", "equipo.html");
-if (pedido && estaEnEquipo(pedido)) {
-  UI.aviso(`${pedido.nombre} ya está en tu equipo.`, "info");
-} else if (pedido && equipo.length >= 6) {
-  UI.aviso(`No se pudo agregar a ${pedido.nombre}: tu equipo ya tiene 6. Quita uno primero.`, "error");
-} else if (pedido) {
-  equipo.push(crearIntegrante(pedido));
-  seleccionado = equipo.length - 1;
-  hayCambios = true;
-  guardarBorrador();
-  pintarEstado("● Cambios sin guardar", "pendiente");
-  UI.aviso(`${pedido.nombre} se unió al equipo (${equipo.length}/6).`, "exito");
+// Carga el catálogo completo (Pokémon, objetos y naturalezas) desde la BD antes de mostrar el editor
+async function iniciar() {
+  cargarArquetipos();
+  const errorCarga = document.getElementById("error-carga");
+  errorCarga.hidden = true;
+  listaCatalogo.innerHTML = '<li class="vacio"><span class="cargando" aria-hidden="true"></span>Cargando Pokémon desde la base de datos...</li>';
+  const parametros = new URLSearchParams(location.search);
+  const idPedido = Number(parametros.get("id")) || null;
+
+  try {
+    const [, objetos, naturalezas] = await Promise.all([
+      cargarPokemones(),
+      api.get("/catalog/items"),
+      api.get("/catalog/natures")
+    ]);
+    OBJETOS.splice(0, OBJETOS.length, "Ninguno", ...objetos.data.map(o => o.nombre));
+    NATURALEZAS.splice(0, NATURALEZAS.length,
+      ...naturalezas.data.map(n => ({ nombre: n.nombre, sube: n.sube || null, baja: n.baja || null })));
+    if (idPedido) await cargarEquipoGuardado(idPedido);
+  } catch (error) {
+    const motivo = error.status === 404 ? "Ese equipo no existe o no es tuyo."
+      : `No se pudo conectar con la base de datos: ${error.message}`;
+    errorCarga.innerHTML = '<p><strong>No se pudo cargar el editor.</strong> <span></span></p>' +
+      '<button type="button" class="boton-mini" id="reintentar-carga">Reintentar</button> ' +
+      '<a class="boton-mini" href="mis-equipos.html">Ir a Mis equipos</a>';
+    errorCarga.querySelector("span").textContent = motivo;
+    errorCarga.hidden = false;
+    document.getElementById("reintentar-carga").addEventListener("click", iniciar);
+    listaCatalogo.innerHTML = '<li class="vacio">Catálogo no disponible.</li>';
+    pintarEstado("Sin conexión", "pendiente");
+    return;
+  }
+
+  if (!idPedido && await cargarBorrador()) {
+    hayCambios = true;
+    pintarEstado("● Borrador recuperado, sin guardar", "pendiente");
+    UI.aviso("Recuperamos el equipo que estabas armando.", "info", { texto: "Empezar de cero", alHacerClic: empezarDeCero });
+  }
+
+  actualizarTodo();
+
+  // Pokémon que llega desde el catálogo con "?agregar=Nombre"
+  const pedido = buscarPokemon(parametros.get("agregar"));
+  if (parametros.has("agregar")) history.replaceState(null, "", equipoId ? `equipo.html?id=${equipoId}` : "equipo.html");
+  if (pedido && estaEnEquipo(pedido)) {
+    UI.aviso(`${pedido.nombre} ya está en tu equipo.`, "info");
+  } else if (pedido && equipo.length >= 6) {
+    UI.aviso(`No se pudo agregar a ${pedido.nombre}: tu equipo ya tiene 6. Quita uno primero.`, "error");
+  } else if (pedido) {
+    await agregar(pedido);
+  }
+
+  // Desde el menú "Importar equipo" (equipo.html#importar): lleva al botón Importar TXT
+  if (location.hash === "#importar") {
+    document.getElementById("importar").scrollIntoView({ behavior: "smooth", block: "start" });
+    document.getElementById("importar-txt").focus({ preventScroll: true });
+  }
 }
 
-actualizarTodo();
+iniciar();

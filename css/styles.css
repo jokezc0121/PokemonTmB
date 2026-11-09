@@ -1849,3 +1849,227 @@ abbr[title] {
   border-left: 4px solid var(--rosa);
   padding-left: 12px;
 }
+/* =====================================================
+   8. MIS EQUIPOS
+   mis-equipos.html
+   ===================================================== */
+
+.lista-equipos {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.tarjeta-equipo {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background-color: var(--azul);
+  border: 3px solid var(--naranja);
+  box-shadow: 4px 4px 0 var(--rosa);
+  padding: 18px;
+}
+
+.tarjeta-equipo-nombre {
+  font-size: 12px;
+  color: var(--amarillo);
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+.tarjeta-equipo-meta,
+.tarjeta-equipo-fecha {
+  font-size: 13px;
+  margin: 0;
+}
+
+.sprites-equipo {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 4px;
+  min-height: 48px;
+  padding: 6px;
+  background: var(--noche);
+}
+
+.sprites-equipo .sprite {
+  width: 100%;
+  max-width: 48px;
+  height: auto;
+  aspect-ratio: 1;
+}
+
+.sprites-equipo .sin-pokemon {
+  grid-column: 1 / -1;
+  align-self: center;
+  font-family: system-ui, sans-serif;
+  font-size: 13px;
+  color: var(--gris);
+}
+
+.estado-vacio {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.estado-vacio-titulo {
+  font-family: "Press Start 2P", system-ui;
+  font-size: 13px;
+  color: var(--amarillo);
+  margin-bottom: 12px;
+}
+
+.estado-vacio .boton {
+  width: auto;
+  margin-top: 20px;
+}
+
+.caja-error {
+  border-color: var(--rosa);
+  font-family: system-ui, sans-serif;
+}
+
+.caja-error strong {
+  color: #FF8FB8;
+}
+
+.caja-error .boton-mini {
+  margin-top: 12px;
+}
+
+/* Perfil: botón para abrir el formulario de edición */
+.panel .boton-editar-perfil {
+  width: auto;
+  margin-top: 16px;
+}
+
+@media (max-width: 600px) {
+  .lista-equipos {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Mis equipos: botón Editar de cada tarjeta */
+.tarjeta-equipo-editar {
+  align-self: flex-start;
+  margin-top: auto;
+}
+
+/* =====================================================
+   9. CREAR EQUIPO: IMPORTAR, DEBILIDADES Y EXPORTAR
+   equipo.html
+   ===================================================== */
+
+.fila-importar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.fila-importar h2 {
+  margin-bottom: 6px;
+}
+
+.panel .boton-archivo {
+  width: auto;
+  cursor: pointer;
+}
+
+.boton-archivo:focus-within {
+  outline: 3px solid var(--amarillo);
+  outline-offset: 3px;
+}
+
+.cartel-error {
+  background-color: #2a0418;
+  border: 3px solid var(--rosa);
+  padding: 16px;
+  margin-top: 16px;
+}
+
+.cartel-titulo {
+  font-family: "Press Start 2P", system-ui;
+  font-size: 12px;
+  color: #FF8FB8;
+  margin-bottom: 8px;
+}
+
+.cartel-texto {
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+.cartel-lista {
+  padding-left: 22px;
+  font-family: system-ui, sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.lista-debilidades {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.debilidad {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 4px 12px;
+  padding: 8px 10px;
+  border-left: 4px solid var(--naranja);
+  background: var(--noche);
+}
+
+.debilidad.grave {
+  border-left-color: var(--rosa);
+}
+
+.debilidad-cuenta {
+  font-family: system-ui, sans-serif;
+  font-size: 14px;
+}
+
+.debilidad.grave .debilidad-cuenta strong {
+  color: #FF8FB8;
+}
+
+.debilidad-quien {
+  grid-column: 1 / -1;
+  font-family: system-ui, sans-serif;
+  font-size: 13px;
+  color: var(--gris);
+}
+
+.aviso-bien {
+  color: var(--verde);
+}
+
+.exportar {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 16px;
+}
+
+.exportar .boton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Perfil: el contador de equipos enlaza a Mis equipos */
+.perfil-resumen a {
+  color: inherit;
+}
+
+/* Debilidades: botón "Mostrar más / menos" */
+.boton-ver-mas {
+  margin-top: 12px;
+}

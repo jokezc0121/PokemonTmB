@@ -87,7 +87,21 @@ function mostrarFavorito() {
 }
 
 // Cargar perfil y Pokémon desde Supabase
+// Número real de equipos del usuario (GET /api/teams)
+async function mostrarCantidadEquipos() {
+  const caja = document.getElementById("resumen-equipos");
+  caja.innerHTML = '<span class="cargando" aria-hidden="true"></span>';
+  try {
+    const respuesta = await api.get("/teams");
+    caja.textContent = respuesta.data.length;
+  } catch (error) {
+    caja.textContent = "?";
+    caja.title = `No se pudo contar tus equipos: ${error.message}`;
+  }
+}
+
 async function iniciarPerfil() {
+  mostrarCantidadEquipos();
   selectFavorito.disabled = true;
   selectFavorito.innerHTML =
     '<option value="">Cargando Pokémon...</option>';
@@ -189,6 +203,8 @@ const botonActualizar = document.getElementById("actualizar-perfil");
 const botonDescartar = document.getElementById("descartar-perfil");
 const mensajePerfil = document.getElementById("mensaje-perfil");
 const contadorBio = document.getElementById("contador-biografia");
+const panelEditar = document.getElementById("panel-editar");
+const botonAbrirEditar = document.getElementById("abrir-editar");
 
 const MAX_BIO = 300;
 const NOMBRES_FORMATO = { individual: "Individual", doble: "Doble" };
@@ -252,8 +268,6 @@ function revisarCambios() {
   const actual = valoresFormulario();
   const hayCambios = !!perfilGuardado &&
     Object.keys(actual).some(clave => actual[clave] !== perfilGuardado[clave]);
-  botonActualizar.disabled = !hayCambios;
-  botonDescartar.disabled = !hayCambios;
   if (hayCambios) {
     mensajePerfil.className = "mensaje";
     mensajePerfil.textContent = "Tienes cambios sin guardar.";
@@ -271,13 +285,39 @@ campoNombre.addEventListener("blur", validarNombrePerfil);
 campoBio.addEventListener("input", () => { validarBioPerfil(); revisarCambios(); });
 campoFormato.addEventListener("change", revisarCambios);
 
-botonDescartar.addEventListener("click", () => {
+// Muestra u oculta el formulario de edición (al cargar la página está oculto)
+function mostrarFormulario(mostrar) {
+  panelEditar.hidden = !mostrar;
+  botonAbrirEditar.hidden = mostrar;
+  botonAbrirEditar.setAttribute("aria-expanded", String(mostrar));
+  if (mostrar) {
+    campoNombre.focus();
+  } else {
+    botonAbrirEditar.focus();
+  }
+}
+
+function restaurarFormulario() {
+  if (!perfilGuardado) return;
   campoNombre.value = perfilGuardado.nombreEntrenador;
   campoBio.value = perfilGuardado.biografia;
   campoFormato.value = perfilGuardado.formatoPreferido;
   ["editar-nombre", "editar-biografia", "editar-formato"].forEach(id => errorCampoPerfil(id, ""));
+  mensajePerfil.textContent = "";
   revisarCambios();
-  UI.aviso("Se descartaron los cambios.", "info");
+}
+
+botonAbrirEditar.addEventListener("click", () => {
+  restaurarFormulario();
+  mostrarFormulario(true);
+});
+
+// Cancelar: descarta lo escrito y oculta el formulario
+botonDescartar.addEventListener("click", () => {
+  const habiaCambios = revisarCambios();
+  restaurarFormulario();
+  mostrarFormulario(false);
+  if (habiaCambios) UI.aviso("Se descartaron los cambios.", "info");
 });
 
 // Campos que devuelve el servidor en los errores 400 → id del input
@@ -297,7 +337,10 @@ formPerfil.addEventListener("submit", async e => {
     formPerfil.querySelector(".invalido")?.focus();
     return;
   }
-  if (!revisarCambios()) return;
+  if (!revisarCambios()) {
+    mostrarFormulario(false);
+    return;
+  }
 
   // Solo se envían los campos que cambiaron
   const actual = valoresFormulario();
@@ -318,16 +361,16 @@ formPerfil.addEventListener("submit", async e => {
     pintarDatosPerfil(respuesta.data);
     // Actualiza el nombre de la esquina derecha de la barra
     sesionLocal.actualizarUsuario(respuesta.data);
-    mensajePerfil.className = "mensaje mensaje-exito";
-    mensajePerfil.textContent = "Perfil actualizado.";
+    mostrarFormulario(false);
     UI.aviso("Tu perfil se actualizó correctamente.", "exito");
   } catch (error) {
-    revisarCambios();
     error.detalles.forEach(d => { if (CAMPOS_PERFIL[d.campo]) errorCampoPerfil(CAMPOS_PERFIL[d.campo], d.mensaje); });
     mensajePerfil.className = "mensaje mensaje-error";
     mensajePerfil.textContent = `No se pudo actualizar: ${error.message}`;
     formPerfil.querySelector(".invalido")?.focus();
   } finally {
+    botonActualizar.disabled = false;
+    botonDescartar.disabled = false;
     botonActualizar.textContent = textoBoton;
   }
 });

@@ -20,6 +20,7 @@
       <nav aria-label="Navegación principal">
         <a href="index.html#menu" class="nav-enlace">Menú</a>
         <a href="equipo.html" class="nav-enlace">Crear equipo</a>
+        <a href="mis-equipos.html" class="nav-enlace">Mis equipos</a>
         <a href="catalogo.html" class="nav-enlace">Catálogo</a>
         <a href="perfil.html" class="nav-enlace">Mi perfil</a>
         <a href="ayuda.html" class="nav-enlace">Ayuda</a>
@@ -48,15 +49,18 @@
         <p id="bio-entrenador">Jugador de Combate Doble. Me gustan los equipos de lluvia.</p>
 
         <ul class="perfil-resumen">
-          <li><strong>3</strong>Equipos</li>
+          <li><strong id="resumen-equipos">—</strong><a href="mis-equipos.html">Equipos</a></li>
           <li><strong id="resumen-formato">—</strong>Formato favorito</li>
         </ul>
+
+        <button type="button" class="boton boton-secundario boton-editar-perfil" id="abrir-editar"
+                aria-expanded="false" aria-controls="panel-editar">Editar perfil</button>
       </div>
     </section>
 
-    <!-- Editar datos del perfil -->
-    <section class="panel">
-      <h2>Editar perfil</h2>
+    <!-- Editar datos del perfil: oculto hasta pulsar "Editar perfil" -->
+    <section class="panel" id="panel-editar" aria-labelledby="titulo-editar" hidden>
+      <h2 id="titulo-editar">Editar perfil</h2>
 
       <form id="form-perfil" novalidate>
         <div class="campo">
@@ -87,8 +91,8 @@
         </div>
 
         <div class="botones-perfil">
-          <button type="submit" class="boton boton-principal" id="actualizar-perfil" disabled>Actualizar perfil</button>
-          <button type="button" class="boton boton-secundario" id="descartar-perfil" disabled>Descartar cambios</button>
+          <button type="submit" class="boton boton-principal" id="actualizar-perfil">Guardar</button>
+          <button type="button" class="boton boton-secundario" id="descartar-perfil">Cancelar</button>
         </div>
         <p class="mensaje" id="mensaje-perfil" role="status" aria-live="polite"></p>
       </form>

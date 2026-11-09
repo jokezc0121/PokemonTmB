@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mis equipos - Pokémon Team Builder</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="img/favicon.png">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <a class="saltar" href="#contenido">Saltar al contenido</a>
+
+  <header class="navbar">
+    <div class="contenedor">
+      <a href="index.html" class="logo" aria-label="TeamBuilder, ir al inicio"><img src="img/logo.png" alt="" class="logo-img">Team<span>Builder</span></a>
+      <nav aria-label="Navegación principal">
+        <a href="index.html#menu" class="nav-enlace">Menú</a>
+        <a href="equipo.html" class="nav-enlace">Crear equipo</a>
+        <a href="mis-equipos.html" class="nav-enlace">Mis equipos</a>
+        <a href="catalogo.html" class="nav-enlace">Catálogo</a>
+        <a href="perfil.html" class="nav-enlace">Mi perfil</a>
+        <a href="ayuda.html" class="nav-enlace">Ayuda</a>
+        <a href="login.html" class="nav-enlace nav-salir" data-accion="salir">Cerrar sesión</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="contenedor editor" id="contenido">
+    <div class="titulo-con-estado">
+      <h1>Mis equipos <span id="total-equipos"></span></h1>
+      <a href="equipo.html" class="boton boton-principal">+ Crear equipo</a>
+    </div>
+
+    <!-- Cargando, error o "aún no tienes equipos" -->
+    <div id="estado-lista" role="status" aria-live="polite"></div>
+
+    <!-- Equipos guardados en la base de datos -->
+    <ul class="lista-equipos" id="lista-equipos" aria-label="Tus equipos"></ul>
+  </main>
+
+  <script src="js/api.js"></script>
+  <script src="js/sesion.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/datos.js"></script>
+  <script src="js/mis-equipos.js"></script>
+</body>
+</html>
