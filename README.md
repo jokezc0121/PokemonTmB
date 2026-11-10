@@ -17,6 +17,7 @@ Aplicación web full-stack para crear, validar, analizar, guardar y compartir eq
 9. [Modelo de datos](#9-modelo-de-datos)
 10. [Instalación, despliegue y ejecución local](#10-instalación-despliegue-y-ejecución-local)
 11. [Pruebas y verificación](#11-pruebas-y-verificación)
+12. [Kit de sustentación y demostración rápida](#12-kit-de-sustentación-y-demostración-rápida)
 
 ---
 
@@ -467,3 +468,25 @@ La suite valida:
 - Análisis de cobertura y detección de debilidades compartidas.
 - Parseo e importación de formatos de texto competitivos.
 - Consistencia del catálogo y esquemas de validación de contraseñas y perfil.
+
+---
+
+## 12. Kit de sustentación y demostración rápida
+
+Para la evaluación oral (Sustentación en vivo de 10 minutos, 15% de la ponderación final), el proyecto incluye la carpeta `demo/` con 3 herramientas diseñadas para evidenciar todos los requisitos de la rúbrica sin fricción:
+
+1. **Guion Estratégico de 10 Minutos (`demo/GUIA_PRESENTACION.md`):**
+   - **Minutos 0 a 3:** Explicación técnica de la arquitectura desacoplada, autenticación JWT stateless y la justificación de la **persistencia dual** (metadatos en PostgreSQL y ficheros binarios en Supabase Storage).
+   - **Minutos 3 a 8 (Demostración en vivo continua):** Flujo de rutas públicas (`index.html`), inicio de sesión con usuario demo (`demo@pokemontb.com` / `Demo12345`), protección de vistas privadas, importación con 1 clic, validación estricta de reglas con respuesta HTTP 400 del servidor, análisis de tipos y persistencia dual en perfil y mis equipos.
+   - **Minutos 8 a 10:** Banco de preguntas y respuestas técnicas para el jurado.
+
+2. **Fichero de Importación Inmediata (`demo/equipo_ejemplo.txt`):**
+   - Archivo con formato de equipo competitivo listo para usar en el botón **"Importar TXT"** del editor (`equipo.html`), permitiendo cargar al instante un equipo funcional con Megaevolución, estadísticas y movimientos en la demo en vivo.
+
+3. **Script de Verificación Rápida de la API (`demo/demo_rapida.py`):**
+   - Script automatizado para terminal que en 3 segundos prueba y valida los endpoints clave:
+     ```bash
+     python demo/demo_rapida.py
+     ```
+   - Ejecuta: Health check, bloqueo de rutas protegidas sin token (401), login y firma JWT, consulta de catálogo, validación y rechazo por especie duplicada (400) y listado de persistencia de equipos.
+
