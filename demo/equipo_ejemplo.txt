@@ -1,0 +1,29 @@
+Charizard @ Charizardita Y
+Ability: Sequía
+Level: 50
+EVs: 4 HP / 252 SpA / 252 Spe
+Modest Nature
+- Lanzallamas
+- Onda Ígnea
+- Rayo Solar
+- Protección
+
+Garchomp @ Vidasfera
+Ability: Piel Tosca
+Level: 50
+EVs: 4 HP / 252 Atk / 252 Spe
+Jolly Nature
+- Terremoto
+- Garra Dragón
+- Avalancha
+- Protección
+
+Incineroar @ Baya Higinia
+Ability: Intimidación
+Level: 50
+EVs: 252 HP / 4 Def / 252 SpD
+Careful Nature
+- Sorpresa
+- Envite Ígneo
+- Desarme
+- Última Palabra
