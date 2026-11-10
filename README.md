@@ -15,6 +15,8 @@ Aplicación web full-stack para crear, validar, analizar, guardar y compartir eq
 7. [Supuestos y restricciones](#7-supuestos-y-restricciones)
 8. [Arquitectura general](#8-arquitectura-general)
 9. [Modelo de datos](#9-modelo-de-datos)
+10. [Instalación, despliegue y ejecución local](#10-instalación-despliegue-y-ejecución-local)
+11. [Pruebas y verificación](#11-pruebas-y-verificación)
 
 ---
 
@@ -377,3 +379,91 @@ Todo lo que el usuario sube o el sistema genera se guarda en dos lugares: el arc
 ### Diagrama entidad-relación
 
 ![Diagrama entidad-relación del Pokémon Team Builder](anexos/pokemonBDweb.jpg)
+
+---
+
+## 10. Instalación, despliegue y ejecución local
+
+### 10.1 Requisitos previos
+- **Node.js**: versión 20 o superior.
+- **NPM**: gestor de paquetes incluido en Node.js.
+- **Supabase**: cuenta con un proyecto activo (PostgreSQL y Storage).
+
+### 10.2 Configuración del Backend
+1. Navega al directorio del backend:
+   ```bash
+   cd backend
+   ```
+2. Instala las dependencias del proyecto:
+   ```bash
+   npm install
+   ```
+3. Configura las variables de entorno:
+   Copia el archivo `.env.example` como `.env` dentro de la carpeta `backend/`:
+   ```bash
+   cp .env.example .env
+   ```
+   Rellena los valores requeridos en el archivo `backend/.env`:
+   - `PORT`: Puerto donde correrá el servidor API (por defecto `3000`).
+   - `SUPABASE_URL`: URL del proyecto Supabase (`https://<project-ref>.supabase.co`).
+   - `SUPABASE_SECRET_KEY`: Service Role Key / Secret Key para operaciones seguras en Supabase.
+   - `SUPABASE_BUCKET`: Nombre del bucket para persistencia dual de ficheros (`archivos`).
+   - `JWT_SECRET`: Cadena secreta de seguridad para la firma de tokens de sesión.
+   - `CORS_ORIGINS`: Orígenes autorizados separados por coma (ej. `http://localhost:5500,http://127.0.0.1:5500`).
+   - `DATABASE_URL`: Cadena de conexión directa de Postgres para migraciones.
+
+4. Migraciones y persistencia de almacenamiento:
+   Aplica la estructura de tablas y prepara el bucket de almacenamiento:
+   ```bash
+   npm run db:migrate
+   npm run setup:storage
+   ```
+
+5. Datos iniciales de prueba (Seeds):
+   Ejecuta el script de seed para crear el usuario demo con equipos de ejemplo:
+   ```bash
+   npm run seed
+   ```
+   - **Usuario demo:** `demo@pokemontb.com`
+   - **Contraseña:** `Demo12345`
+
+6. Iniciar el servidor API REST:
+   - Modo desarrollo:
+     ```bash
+     npm run dev
+     ```
+   - Modo producción:
+     ```bash
+     npm start
+     ```
+   El backend iniciará en `http://localhost:3000`. Puedes verificar su estado en:
+   `http://localhost:3000/api/health` (debe responder `{"estado": "ok"}`).
+
+### 10.3 Ejecución del Frontend
+El cliente web está desacoplado y estructurado con HTML5, CSS3 y JavaScript moderno:
+1. Abre la raíz del proyecto (`PokemonTmB`) en tu servidor estático preferido (ej. extensión **Live Server** de VS Code o `npx serve .`).
+2. Asegúrate de ejecutar el frontend en el puerto `5500` (`http://localhost:5500` o `http://127.0.0.1:5500`), el cual coincide con la configuración de `CORS_ORIGINS` del backend.
+3. Abre en el navegador `http://localhost:5500/index.html` para acceder a la aplicación.
+
+---
+
+## 11. Pruebas y verificación
+
+El backend incluye una suite de pruebas unitarias sobre el dominio de negocio, reglas de validación de equipos y utilidades:
+
+Para ejecutar todas las pruebas:
+```bash
+cd backend
+npm test
+```
+
+La suite valida:
+- Multiplicador de efectividad y resistencias de los 18 tipos elementales.
+- Integridad y validación de reglas de equipo y resolución de especies.
+- Detección de especies repetidas, objetos repetidos, movimientos ilegales y límite de EVs.
+- Regulación de Megaevolución y asignación de Megapiedras correspondientes.
+- Filtro de Pokémon legales por código de regulación.
+- Algoritmo de recomendación basado en la estadística base con menor promedio.
+- Análisis de cobertura y detección de debilidades compartidas.
+- Parseo e importación de formatos de texto competitivos.
+- Consistencia del catálogo y esquemas de validación de contraseñas y perfil.
